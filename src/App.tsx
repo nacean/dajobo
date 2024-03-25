@@ -1,5 +1,14 @@
+import { Reset } from 'styled-reset';
+
+import ElixirPage from '@src/pages/ElixirPage';
+
 function App() {
-  return <div>hi</div>;
+  return (
+    <>
+      <Reset />
+      <ElixirPage />
+    </>
+  );
 }
 
 export default App;
