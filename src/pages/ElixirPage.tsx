@@ -1,4 +1,6 @@
-import { Button, Paper } from '@mui/material';
+import { Button } from '@mui/material';
+import Advice from '@src/components/elixir/advice/Advice';
+import EffectList from '@src/components/elixir/effects/EffectList';
 import { createStyles } from '@src/styles/utils';
 
 const ElixirPage = () => {
@@ -6,38 +8,11 @@ const ElixirPage = () => {
     <div css={styles.container}>
       <div css={styles.upperContainer}>
         <div css={styles.advicePickContainer}>
-          <Paper elevation={3} css={styles.advice}>
-            마법 방어력
-          </Paper>
-          <Paper elevation={3} css={styles.advice}>
-            회심
-          </Paper>
-          <Paper elevation={3} css={styles.advice}>
-            공격력
-          </Paper>
+          <Advice />
+          <Advice />
+          <Advice />
         </div>
-        <div css={styles.effectListContainer}>
-          <div css={styles.effects}>
-            <Paper elevation={2} css={styles.effect}>
-              정제 필요
-            </Paper>
-            <Paper elevation={2} css={styles.effect}>
-              정제 필요
-            </Paper>
-            <Paper elevation={2} css={styles.effect}>
-              정제 필요
-            </Paper>
-            <Paper elevation={2} css={styles.effect}>
-              정제 필요
-            </Paper>
-            <Paper elevation={2} css={styles.effect}>
-              정제 필요
-            </Paper>
-          </div>
-          <Button variant="contained" css={styles.anotherAdviceButton} fullWidth>
-            다른 조언 보기
-          </Button>
-        </div>
+        <EffectList />
       </div>
       <div css={styles.selectButtonContainer}>
         <div>연성 n회 가능</div>
@@ -70,41 +45,6 @@ const styles = createStyles({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
-  },
-  advice: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 310,
-    height: 40,
-    padding: 12,
-  },
-  effectListContainer: {
-    width: '25%',
-    border: '1px solid black',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 8,
-    paddingInline: 8,
-  },
-  effects: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 24,
-  },
-  effect: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '90%',
-    height: 60,
-    padding: 12,
-  },
-  anotherAdviceButton: {
-    height: 52,
-    fontSize: 20,
   },
   selectButtonContainer: {
     width: '100%',
