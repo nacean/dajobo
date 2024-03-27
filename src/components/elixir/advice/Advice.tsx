@@ -1,7 +1,14 @@
 import { Button } from '@mui/material';
 import { createStyles } from '@src/styles/utils';
+import { Effect } from '@src/types/effect';
+import { FC } from 'react';
 
-const Advice = () => {
+interface Props {
+  effect: Effect;
+  pickEffect: (effect: Effect) => void;
+}
+
+const Advice: FC<Props> = ({ effect, pickEffect }) => {
   return (
     <div css={styles.container}>
       <div css={styles.stackContainer}>
@@ -9,8 +16,15 @@ const Advice = () => {
         <div css={styles.stack} />
         <div css={styles.stack} />
       </div>
-      <Button variant="outlined" color="info" css={styles.advice}>
-        이대론 안되겠어. 엘릭서의 효과와 단계를 초기화하겠네.
+      <Button
+        variant="outlined"
+        color="info"
+        css={styles.advice}
+        onClick={() => {
+          pickEffect(effect);
+        }}
+      >
+        {`${effect.effectName} 효과를 정제하는건 어때요? \n (${effect.typeName})`}
       </Button>
     </div>
   );
@@ -42,6 +56,7 @@ const styles = createStyles({
     width: 310,
     height: 72,
     padding: 12,
+    whiteSpace: 'pre-wrap',
   },
 });
 

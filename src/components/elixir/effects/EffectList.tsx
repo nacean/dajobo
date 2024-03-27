@@ -1,17 +1,21 @@
 import { Button } from '@mui/material';
-import Effect from '@src/components/elixir/effects/Effect';
+import PickedEffect from '@src/components/elixir/effects/PickedEffect';
 import { createStyles } from '@src/styles/utils';
+import { Effect } from '@src/types/effect';
+import { FC } from 'react';
+
+interface Props {
+  pickedEffects: Effect[];
+}
 
 //TODO : 다조보 파일 위치 추후 변경 필요하면 변경
-const EffectList = () => {
+const EffectList: FC<Props> = ({ pickedEffects }) => {
   return (
     <div css={styles.effectListContainer}>
       <div css={styles.effects}>
-        <Effect />
-        <Effect />
-        <Effect />
-        <Effect />
-        <Effect />
+        {pickedEffects.map(pickedEffect => (
+          <PickedEffect pickedEffect={pickedEffect} />
+        ))}
       </div>
       <Button variant="contained" css={styles.anotherAdviceButton} fullWidth>
         다른 조언 보기
