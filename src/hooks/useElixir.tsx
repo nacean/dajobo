@@ -1,5 +1,6 @@
 import { BasicAdvice } from '@src/types/basicAdvice';
 import { Effect } from '@src/types/effect';
+import { pickEffectToUpdate } from '@src/utils/effectUtils';
 import { ParseResult } from 'papaparse';
 import Chooser from 'random-seed-weighted-chooser';
 import { useCallback, useEffect, useState } from 'react';
@@ -13,6 +14,9 @@ const useElixir = () => {
 
   const [basicAdvices, setBasicAdvices] = useState<BasicAdvice[]>([]); // 기초 조언 전체
   const [proposedAdvices, setProposedAdvices] = useState<BasicAdvice[]>([]); // 현자가 제안하는 조언 3가지
+  const [pickedAdvice, setPickedAdvice] = useState<BasicAdvice | null>(null); // 유저가 선택한 조언
+
+  const [isUserSelectAdvice, setIsUserSelectAdvice] = useState<boolean>(false); //유저가 조언을 골랐는가? 골랐으면 효과 정제 차례
 
   const [round, setRound] = useState(0); // 몇번째 정재인지 (기본은 0~13까지 가능)
 
@@ -102,16 +106,48 @@ const useElixir = () => {
   }, [getProposedAdvices, readString]);
 
   const pickAdvice = (advice: BasicAdvice) => {
-    //TODO : advice 구현
+    setPickedAdvice(advice);
+  };
+
+  const adaptAdvice = () => {
+    if (pickedAdvice === null) {
+      //TODO : advice 안골랐을때 notice 주기
+      return;
+    }
+    // 이후 처리
+    setIsUserSelectAdvice(true);
+  };
+
+  const executeMagic = () => {
+    const newPickedEffects = pickEffectToUpdate(pickedEffects, 1);
+    setPickedEffects(newPickedEffects);
+
     getProposedAdvices(basicAdvices);
+    //TODO : advice 구현
+
+    // 이후 처리
     setRound(round + 1);
+    setLastPickedEffects([]);
+    setIsUserSelectAdvice(false);
+    setPickedAdvice(null);
   };
 
   useEffect(() => {
     getAllEffects();
     getAllBasicAdvices();
-  }, [getAllBasicAdvices, getAllEffects]);
+    console.log('effect');
+  }, []);
 
-  return { proposedEffects, pickedEffects, pickEffect, proposedAdvices, pickAdvice, round };
+  return {
+    proposedEffects,
+    pickedEffects,
+    pickEffect,
+    proposedAdvices,
+    pickAdvice,
+    round,
+    adaptAdvice,
+    executeMagic,
+    isUserSelectAdvice,
+  };
 };
 export default useElixir;

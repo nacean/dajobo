@@ -31,7 +31,8 @@ export const pickEffectToUpdate = (pickedEffects: Effect[], updateCount: number)
 
   //대성공 판별
   const greatWeightLine = Math.random();
-  if (newPickedEffects[indexToUpdate].greatWeight <= greatWeightLine && newUpdateCount > 0) {
+  console.log(greatWeightLine);
+  if (newPickedEffects[indexToUpdate].greatWeight >= greatWeightLine && newUpdateCount > 0) {
     newUpdateCount += 1;
   }
 

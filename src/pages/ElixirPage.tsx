@@ -7,8 +7,25 @@ import useElixir from '@src/hooks/useElixir';
 import { createStyles } from '@src/utils/utils';
 
 const ElixirPage = () => {
-  const { proposedEffects, pickedEffects, pickEffect, proposedAdvices, pickAdvice, round } =
-    useElixir();
+  const {
+    proposedEffects,
+    pickedEffects,
+    pickEffect,
+    proposedAdvices,
+    pickAdvice,
+    round,
+    adaptAdvice,
+    executeMagic,
+    isUserSelectAdvice,
+  } = useElixir();
+
+  const clickAdaptOrExecuteButton = () => {
+    if (isUserSelectAdvice) {
+      executeMagic();
+    } else {
+      adaptAdvice();
+    }
+  };
 
   if (proposedEffects.length === 0) {
     return <div>loading...</div>;
@@ -32,12 +49,14 @@ const ElixirPage = () => {
         </div>
         <EffectList pickedEffects={pickedEffects} />
       </div>
-      <div css={styles.selectButtonContainer}>
-        <div>{pickedEffects.length === 5 ? `연성 ${14 - round}회 가능` : '효과 정제'}</div>
-        <Button variant="contained" css={styles.selectButton}>
-          정제
-        </Button>
-      </div>
+      {pickedEffects.length === 5 && (
+        <div css={styles.selectButtonContainer}>
+          <div>{`연성 ${14 - round}회 가능`}</div>
+          <Button variant="contained" css={styles.selectButton} onClick={clickAdaptOrExecuteButton}>
+            {isUserSelectAdvice ? '정제하기' : '조언 선택'}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
