@@ -1,4 +1,4 @@
-export interface basicAdvice {
+export interface BasicAdvice {
   adviceNum: number;
   explain: string;
   target: number;

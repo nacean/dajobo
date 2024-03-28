@@ -1,5 +1,5 @@
 import { Paper } from '@mui/material';
-import EffectGauge from '@src/components/elixir/effects/EffectGauge';
+import EffectGauge from '@src/components/elixir/effects/pickedEffects/EffectGauge';
 import { createStyles } from '@src/styles/utils';
 import { Effect } from '@src/types/effect';
 import { getEffectLevel, getPercentageFromWeight } from '@src/utils/effectUtils';

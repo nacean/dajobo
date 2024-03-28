@@ -1,30 +1,25 @@
 import { Button } from '@mui/material';
 import { createStyles } from '@src/styles/utils';
-import { BasicAdvice } from '@src/types/basicAdvice';
+import { Effect } from '@src/types/effect';
 import { FC } from 'react';
 
 interface Props {
-  advice: BasicAdvice;
-  pickAdvice: (advice: BasicAdvice) => void;
+  effect: Effect;
+  pickEffect: (effect: Effect) => void;
 }
 
-const Advice: FC<Props> = ({ advice, pickAdvice }) => {
+const InitEffect: FC<Props> = ({ effect, pickEffect }) => {
   return (
     <div css={styles.container}>
-      <div css={styles.stackContainer}>
-        <div css={styles.stack} />
-        <div css={styles.stack} />
-        <div css={styles.stack} />
-      </div>
       <Button
         variant="outlined"
         color="info"
-        css={styles.advice}
+        css={styles.effect}
         onClick={() => {
-          pickAdvice(advice);
+          pickEffect(effect);
         }}
       >
-        {advice.explain}
+        {`${effect.effectName} 효과를 정제하는건 어때요? \n (${effect.typeName})`}
       </Button>
     </div>
   );
@@ -37,19 +32,12 @@ const styles = createStyles({
     alignItems: 'center',
     gap: 8,
   },
-  stackContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: 12,
-  },
   stack: {
     border: '1px solid black',
     borderRadius: '50%',
     padding: 12,
   },
-  advice: {
+  effect: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -60,4 +48,4 @@ const styles = createStyles({
   },
 });
 
-export default Advice;
+export default InitEffect;
