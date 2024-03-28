@@ -4,7 +4,7 @@ import Advice from '@src/components/elixir/advice/Advice';
 import InitEffect from '@src/components/elixir/effects/InitEffect';
 import EffectList from '@src/components/elixir/effects/pickedEffects/EffectList';
 import useElixir from '@src/hooks/useElixir';
-import { createStyles } from '@src/styles/utils';
+import { createStyles } from '@src/utils/utils';
 
 const ElixirPage = () => {
   const { proposedEffects, pickedEffects, pickEffect, proposedAdvices, pickAdvice, round } =

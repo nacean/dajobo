@@ -1,4 +1,4 @@
-import { createStyles } from '@src/styles/utils';
+import { createStyles } from '@src/utils/utils';
 import { FC } from 'react';
 
 interface Props {

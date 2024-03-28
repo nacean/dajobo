@@ -1,6 +1,6 @@
 import { Button } from '@mui/material';
 import PickedEffect from '@src/components/elixir/effects/pickedEffects/PickedEffect';
-import { createStyles } from '@src/styles/utils';
+import { createStyles } from '@src/utils/utils';
 import { Effect } from '@src/types/effect';
 import { FC } from 'react';
 

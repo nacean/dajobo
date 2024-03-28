@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { createStyles } from '@src/styles/utils';
+import { createStyles } from '@src/utils/utils';
 import { BasicAdvice } from '@src/types/basicAdvice';
 import { FC } from 'react';
 

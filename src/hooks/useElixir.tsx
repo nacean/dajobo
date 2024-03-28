@@ -8,6 +8,7 @@ import { usePapaParse } from 'react-papaparse';
 const useElixir = () => {
   const [effects, setEffects] = useState<Effect[]>([]); // 효과 전체
   const [proposedEffects, setProposedEffects] = useState<Effect[]>([]); // 초반 제안 3가지 효과
+  const [lastPickedEffects, setLastPickedEffects] = useState<Effect[]>([]); // '이변 연성~' 으로 조정되기 전 원래 효과들
   const [pickedEffects, setPickedEffects] = useState<Effect[]>([]); // 내가 뽑은 효과(총 5개)
 
   const [basicAdvices, setBasicAdvices] = useState<BasicAdvice[]>([]); // 기초 조언 전체

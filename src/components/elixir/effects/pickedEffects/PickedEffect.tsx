@@ -1,6 +1,6 @@
 import { Paper } from '@mui/material';
 import EffectGauge from '@src/components/elixir/effects/pickedEffects/EffectGauge';
-import { createStyles } from '@src/styles/utils';
+import { createStyles } from '@src/utils/utils';
 import { Effect } from '@src/types/effect';
 import { getEffectLevel, getPercentageFromWeight } from '@src/utils/effectUtils';
 import { FC } from 'react';
