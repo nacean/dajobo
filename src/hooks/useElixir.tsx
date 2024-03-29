@@ -51,8 +51,12 @@ const useElixir = () => {
     const newEffectsToUpdate: Effect[] = [];
 
     for (let i = 0; i < 3; i++) {
-      const newEffect = Chooser.chooseWeightedObject(effects) as Effect;
-      newEffectsToUpdate.push(newEffect);
+      while (newEffectsToUpdate.length === i) {
+        const newEffect = Chooser.chooseWeightedObject(effects) as Effect;
+        if (newEffectsToUpdate.indexOf(newEffect) === -1) {
+          newEffectsToUpdate.push(newEffect);
+        }
+      }
     }
 
     setProposedEffects(newEffectsToUpdate);
@@ -84,10 +88,30 @@ const useElixir = () => {
   }, [getProposedEffects, readString]);
 
   const pickEffect = (effect: Effect) => {
+    let newEffects = effects;
+
+    //뽑은 effect 확률 0으로
+    const findIndex = effects.findIndex(nowEffect => nowEffect === effect);
+    newEffects[findIndex].weight = 0;
+
+    //뽑은게 공용이 아니라면 그 부위 옵션은 못뽑게 수정
+    if (effect.typeName !== '공용') {
+      newEffects = newEffects.map(nowEffect => {
+        if (effect.typeName === nowEffect.typeName) {
+          const newEffect = nowEffect;
+          newEffect.weight = 0;
+          return newEffect;
+        }
+        return nowEffect;
+      });
+    }
+
     const newPickedEffects = [...pickedEffects, effect];
     setPickedEffects(newPickedEffects);
 
-    getProposedEffects(effects);
+    //확률 업데이트 및 새로 effect 뽑기
+    setEffects(newEffects);
+    getProposedEffects(newEffects);
   };
 
   const getProposedAdvices = useCallback(
