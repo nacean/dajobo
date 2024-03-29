@@ -21,7 +21,11 @@ const EffectGauge: FC<Props> = ({ gauge }) => {
   return (
     <div css={styles.gaugeContainer}>
       {gaugeArray.map((num, index) => (
-        <div css={styles.gauge} style={{ backgroundColor: defineBackgroundColor(index) }}>
+        <div
+          css={styles.gauge}
+          style={{ backgroundColor: defineBackgroundColor(index) }}
+          key={index}
+        >
           {num !== 0 && num}
         </div>
       ))}

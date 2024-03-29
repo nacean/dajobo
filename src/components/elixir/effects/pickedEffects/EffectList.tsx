@@ -13,8 +13,8 @@ const EffectList: FC<Props> = ({ pickedEffects }) => {
   return (
     <div css={styles.effectListContainer}>
       <div css={styles.effects}>
-        {pickedEffects.map(pickedEffect => (
-          <PickedEffect pickedEffect={pickedEffect} />
+        {pickedEffects.map((pickedEffect, index) => (
+          <PickedEffect pickedEffect={pickedEffect} key={pickedEffect.effectName + index} />
         ))}
       </div>
       <Button variant="contained" css={styles.anotherAdviceButton} fullWidth>

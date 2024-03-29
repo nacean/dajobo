@@ -6,9 +6,10 @@ import { FC } from 'react';
 interface Props {
   advice: BasicAdvice;
   pickAdvice: (advice: BasicAdvice) => void;
+  isPicked: boolean;
 }
 
-const Advice: FC<Props> = ({ advice, pickAdvice }) => {
+const Advice: FC<Props> = ({ advice, pickAdvice, isPicked }) => {
   return (
     <div css={styles.container}>
       <div css={styles.stackContainer}>
@@ -20,6 +21,7 @@ const Advice: FC<Props> = ({ advice, pickAdvice }) => {
         variant="outlined"
         color="info"
         css={styles.advice}
+        style={{ backgroundColor: isPicked ? 'blue' : undefined }}
         onClick={() => {
           pickAdvice(advice);
         }}
@@ -38,6 +40,7 @@ const styles = createStyles({
     gap: 8,
   },
   stackContainer: {
+    height: 30,
     width: '100%',
     display: 'flex',
     justifyContent: 'center',

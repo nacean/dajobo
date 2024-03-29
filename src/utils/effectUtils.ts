@@ -64,6 +64,8 @@ export const updateEffectsWeight = (
   } else if (pickedEffects[index].pickWeight + newWeightToAdd < 0) {
     newWeightToAdd = -pickedEffects[index].pickWeight;
     newPickedEffects[index].pickWeight = 0;
+  } else {
+    newPickedEffects[index].pickWeight += weightToAdd;
   }
 
   const weightToAddOthers = newWeightToAdd / 4;

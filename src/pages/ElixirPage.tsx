@@ -17,6 +17,7 @@ const ElixirPage = () => {
     adaptAdvice,
     executeMagic,
     isUserSelectAdvice,
+    pickedAdvice,
   } = useElixir();
 
   const clickAdaptOrExecuteButton = () => {
@@ -37,7 +38,12 @@ const ElixirPage = () => {
         <div css={styles.advicePickContainer}>
           {pickedEffects.length === 5
             ? proposedAdvices.map((advice, index) => (
-                <Advice advice={advice} pickAdvice={pickAdvice} key={advice.explain + index} />
+                <Advice
+                  advice={advice}
+                  pickAdvice={pickAdvice}
+                  key={advice.explain + index}
+                  isPicked={advice === pickedAdvice}
+                />
               ))
             : proposedEffects.map((effect, index) => (
                 <InitEffect
@@ -76,6 +82,7 @@ const styles = createStyles({
     paddingInline: 48,
   },
   advicePickContainer: {
+    height: 680,
     border: '1px solid black',
     width: '65%',
     display: 'flex',

@@ -1,6 +1,6 @@
 import { BasicAdvice } from '@src/types/basicAdvice';
 import { Effect } from '@src/types/effect';
-import { pickEffectToUpdate } from '@src/utils/effectUtils';
+import { pickEffectToUpdate, updateEffectsWeight } from '@src/utils/effectUtils';
 import { ParseResult } from 'papaparse';
 import Chooser from 'random-seed-weighted-chooser';
 import { useCallback, useEffect, useState } from 'react';
@@ -21,6 +21,27 @@ const useElixir = () => {
   const [round, setRound] = useState(0); // 몇번째 정재인지 (기본은 0~13까지 가능)
 
   const { readString } = usePapaParse();
+
+  //func 0,2
+  const regulateWeightThisTime = (advice: BasicAdvice) => {
+    // 백업해두기
+    setLastPickedEffects(pickedEffects);
+
+    const refinedProbability = advice.adviceNum === 2 ? -advice.probability : advice.probability;
+
+    const regulatedEffects = updateEffectsWeight(pickedEffects, advice.target, refinedProbability);
+
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 1,3
+  const regulateWeightAllTime = (advice: BasicAdvice) => {
+    const refinedProbability = advice.adviceNum === 3 ? -advice.probability : advice.probability;
+
+    const regulatedEffects = updateEffectsWeight(pickedEffects, advice.target, refinedProbability);
+
+    setPickedEffects(regulatedEffects);
+  };
 
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
@@ -109,11 +130,21 @@ const useElixir = () => {
     setPickedAdvice(advice);
   };
 
+  const elixirFuncs = [
+    regulateWeightThisTime,
+    regulateWeightAllTime,
+    regulateWeightThisTime,
+    regulateWeightAllTime,
+  ];
+
   const adaptAdvice = () => {
     if (pickedAdvice === null) {
       //TODO : advice 안골랐을때 notice 주기
       return;
     }
+
+    elixirFuncs[pickedAdvice.adviceNum](pickedAdvice);
+
     // 이후 처리
     setIsUserSelectAdvice(true);
   };
@@ -125,17 +156,20 @@ const useElixir = () => {
     getProposedAdvices(basicAdvices);
     //TODO : advice 구현
 
-    // 이후 처리
+    // 이후 초기화 처리
     setRound(round + 1);
     setLastPickedEffects([]);
     setIsUserSelectAdvice(false);
     setPickedAdvice(null);
+    if (lastPickedEffects.length !== 0) {
+      setPickedEffects(lastPickedEffects);
+    }
+    setLastPickedEffects([]);
   };
 
   useEffect(() => {
     getAllEffects();
     getAllBasicAdvices();
-    console.log('effect');
   }, []);
 
   return {
@@ -148,6 +182,7 @@ const useElixir = () => {
     adaptAdvice,
     executeMagic,
     isUserSelectAdvice,
+    pickedAdvice,
   };
 };
 export default useElixir;

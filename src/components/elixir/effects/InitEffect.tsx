@@ -11,6 +11,7 @@ interface Props {
 const InitEffect: FC<Props> = ({ effect, pickEffect }) => {
   return (
     <div css={styles.container}>
+      <div css={styles.emptyContainer}></div>
       <Button
         variant="outlined"
         color="info"
@@ -31,6 +32,9 @@ const styles = createStyles({
     flexDirection: 'column',
     alignItems: 'center',
     gap: 8,
+  },
+  emptyContainer: {
+    height: 30,
   },
   stack: {
     border: '1px solid black',
