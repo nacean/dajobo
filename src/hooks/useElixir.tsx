@@ -23,30 +23,36 @@ const useElixir = () => {
 
   const [indexToAdjustAdvice, setIndexToAdjustAdvice] = useState<number | null>(null); //effect 선택형 조언 일때 사용
 
+  const [gaugeUpdateCount, setGaugeUpdateCount] = useState<number>(1); //연성할 게이지 개수
+  const [roundRemoveCount, setroundRemoveCount] = useState<number>(1); //차감할 연성 기회 개수
   const [round, setRound] = useState(0); // 몇번째 정재인지 (기본은 0~13까지 가능)
 
   const { readString } = usePapaParse();
 
   //TODO : func 0,1,2,3 합치기
   //func 0,2
-  const regulateWeightThisTime = (advice: BasicAdvice) => {
+  const regulateWeightThisTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
     // 백업해두기
     const syncPickedEffects = pickedEffects;
     setLastPickedEffects(syncPickedEffects);
     onlyThisTime.current = true;
 
-    const refinedProbability = advice.adviceNum === 2 ? -advice.probability : advice.probability;
+    const refinedProbability =
+      pickedAdvice.adviceNum === 2 ? -pickedAdvice.probability : pickedAdvice.probability;
     //깊은 복사를 위한 deep copy
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    if (typeof advice.target === 'number') {
+    if (typeof pickedAdvice.target === 'number') {
       const regulatedEffects = updateEffectsWeight(
         copiedEffects,
-        advice.target,
+        pickedAdvice.target,
         refinedProbability,
       );
       setPickedEffects(regulatedEffects);
-    } else if (advice.target === 'pick' && indexToAdjustAdvice !== null) {
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
       const regulatedEffects = updateEffectsWeight(
         copiedEffects,
         indexToAdjustAdvice,
@@ -57,18 +63,23 @@ const useElixir = () => {
   };
 
   //func 1,3
-  const regulateWeightAllTime = (advice: BasicAdvice) => {
-    const refinedProbability = advice.adviceNum === 3 ? -advice.probability : advice.probability;
+  const regulateWeightAllTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    const refinedProbability =
+      pickedAdvice.adviceNum === 3 ? -pickedAdvice.probability : pickedAdvice.probability;
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    if (typeof advice.target === 'number') {
+    if (typeof pickedAdvice.target === 'number') {
       const regulatedEffects = updateEffectsWeight(
         copiedEffects,
-        advice.target,
+        pickedAdvice.target,
         refinedProbability,
       );
       setPickedEffects(regulatedEffects);
-    } else if (advice.target === 'pick' && indexToAdjustAdvice !== null) {
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
       const regulatedEffects = updateEffectsWeight(
         copiedEffects,
         indexToAdjustAdvice,
@@ -76,6 +87,54 @@ const useElixir = () => {
       );
       setPickedEffects(regulatedEffects);
     }
+  };
+
+  //func 4
+  const snipeEffect = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+    // 백업해두기
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateEffectsWeight(copiedEffects, pickedAdvice.target, 1);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectsWeight(copiedEffects, indexToAdjustAdvice, 1);
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
+  //func 5
+  const snipeEffectUseRoundTwo = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    // 백업해두기
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateEffectsWeight(copiedEffects, pickedAdvice.target, 1);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectsWeight(copiedEffects, indexToAdjustAdvice, 1);
+      setPickedEffects(regulatedEffects);
+    }
+
+    setGaugeUpdateCount(2);
+    setroundRemoveCount(2);
   };
 
   const getProposedEffects = useCallback((effects: Effect[]) => {
@@ -202,6 +261,8 @@ const useElixir = () => {
     regulateWeightAllTime,
     regulateWeightThisTime,
     regulateWeightAllTime,
+    snipeEffect,
+    snipeEffectUseRoundTwo,
   ];
 
   const adaptAdvice = () => {
@@ -215,7 +276,7 @@ const useElixir = () => {
       return;
     }
 
-    elixirFuncs[pickedAdvice.adviceNum](pickedAdvice);
+    elixirFuncs[pickedAdvice.adviceNum]();
 
     // 이후 처리
     setIsUserSelectAdvice(true);
@@ -223,7 +284,7 @@ const useElixir = () => {
 
   const executeMagic = () => {
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
-    const newPickedEffects = pickEffectToUpdate(copiedEffects, 1);
+    const newPickedEffects = pickEffectToUpdate(copiedEffects, gaugeUpdateCount);
 
     if (onlyThisTime.current) {
       //이번 연성~ 은 확률 다시 되돌리기
@@ -241,13 +302,14 @@ const useElixir = () => {
     }
 
     getProposedAdvices(basicAdvices);
-    //TODO : advice 구현
+    setRound(round + roundRemoveCount);
 
     // 이후 초기화 처리
-    setRound(round + 1);
     setIsUserSelectAdvice(false);
     setPickedAdvice(null);
     setIndexToAdjustAdvice(null);
+    setGaugeUpdateCount(1);
+    setroundRemoveCount(1);
   };
 
   useEffect(() => {
