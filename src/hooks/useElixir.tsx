@@ -158,6 +158,9 @@ const useElixir = () => {
   }, [getProposedAdvices, readString]);
 
   const pickAdvice = (advice: BasicAdvice) => {
+    if (isUserSelectAdvice) {
+      return;
+    }
     setPickedAdvice(advice);
   };
 
