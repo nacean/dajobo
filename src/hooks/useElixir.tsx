@@ -137,6 +137,17 @@ const useElixir = () => {
     setroundRemoveCount(2);
   };
 
+  //func 6
+  const gaugeTwoThisTime = () => {
+    setGaugeUpdateCount(2);
+  };
+
+  //func 7
+  const gaugeThreeThisTimeUseRoundTwo = () => {
+    setGaugeUpdateCount(3);
+    setroundRemoveCount(2);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -263,6 +274,8 @@ const useElixir = () => {
     regulateWeightAllTime,
     snipeEffect,
     snipeEffectUseRoundTwo,
+    gaugeTwoThisTime,
+    gaugeThreeThisTimeUseRoundTwo,
   ];
 
   const adaptAdvice = () => {
