@@ -3,13 +3,16 @@ import { Effect } from '@src/types/effect';
 import { pickEffectToUpdate, updateEffectsWeight } from '@src/utils/effectUtils';
 import { ParseResult } from 'papaparse';
 import Chooser from 'random-seed-weighted-chooser';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePapaParse } from 'react-papaparse';
 
 const useElixir = () => {
   const [effects, setEffects] = useState<Effect[]>([]); // 효과 전체
   const [proposedEffects, setProposedEffects] = useState<Effect[]>([]); // 초반 제안 3가지 효과
-  const [lastPickedEffects, setLastPickedEffects] = useState<Effect[]>([]); // '이변 연성~' 으로 조정되기 전 원래 효과들
+
+  const [lastPickedEffects, setLastPickedEffects] = useState<Effect[]>([]); // 다시 되돌릴 뽑은 효과(총 5개)
+  const onlyThisTime = useRef<boolean>(false);
+
   const [pickedEffects, setPickedEffects] = useState<Effect[]>([]); // 내가 뽑은 효과(총 5개)
 
   const [basicAdvices, setBasicAdvices] = useState<BasicAdvice[]>([]); // 기초 조언 전체
@@ -25,20 +28,24 @@ const useElixir = () => {
   //func 0,2
   const regulateWeightThisTime = (advice: BasicAdvice) => {
     // 백업해두기
-    setLastPickedEffects(pickedEffects);
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
 
     const refinedProbability = advice.adviceNum === 2 ? -advice.probability : advice.probability;
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    const regulatedEffects = updateEffectsWeight(pickedEffects, advice.target, refinedProbability);
-
+    const regulatedEffects = updateEffectsWeight(copiedEffects, advice.target, refinedProbability);
     setPickedEffects(regulatedEffects);
   };
 
   //func 1,3
   const regulateWeightAllTime = (advice: BasicAdvice) => {
     const refinedProbability = advice.adviceNum === 3 ? -advice.probability : advice.probability;
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    const regulatedEffects = updateEffectsWeight(pickedEffects, advice.target, refinedProbability);
+    const regulatedEffects = updateEffectsWeight(copiedEffects, advice.target, refinedProbability);
 
     setPickedEffects(regulatedEffects);
   };
@@ -174,7 +181,8 @@ const useElixir = () => {
   };
 
   const executeMagic = () => {
-    const newPickedEffects = pickEffectToUpdate(pickedEffects, 1);
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+    const newPickedEffects = pickEffectToUpdate(copiedEffects, 1);
     setPickedEffects(newPickedEffects);
 
     getProposedAdvices(basicAdvices);
@@ -182,13 +190,13 @@ const useElixir = () => {
 
     // 이후 초기화 처리
     setRound(round + 1);
-    setLastPickedEffects([]);
     setIsUserSelectAdvice(false);
     setPickedAdvice(null);
-    if (lastPickedEffects.length !== 0) {
+    if (onlyThisTime.current) {
+      console.log(lastPickedEffects);
       setPickedEffects(lastPickedEffects);
+      onlyThisTime.current = false;
     }
-    setLastPickedEffects([]);
   };
 
   useEffect(() => {
