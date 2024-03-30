@@ -44,6 +44,7 @@ const styles = createStyles({
     flexShrink: 0,
     width: 64,
     height: 64,
+    color: 'black',
     border: '1px solid black',
     borderRadius: '100%',
     display: 'flex',

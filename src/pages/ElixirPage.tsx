@@ -18,6 +18,8 @@ const ElixirPage = () => {
     executeMagic,
     isUserSelectAdvice,
     pickedAdvice,
+    indexToAdjustAdvice,
+    pickEffectIndex,
   } = useElixir();
 
   const clickAdaptOrExecuteButton = () => {
@@ -53,7 +55,12 @@ const ElixirPage = () => {
                 />
               ))}
         </div>
-        <EffectList pickedEffects={pickedEffects} />
+        <EffectList
+          pickedEffects={pickedEffects}
+          pickedAdvice={pickedAdvice}
+          indexToAdjustAdvice={indexToAdjustAdvice}
+          pickEffectIndex={pickEffectIndex}
+        />
       </div>
       {pickedEffects.length === 5 && (
         <div css={styles.selectButtonContainer}>

@@ -1,7 +1,7 @@
 export interface BasicAdvice {
   adviceNum: number;
   explain: string;
-  target: number;
+  target: number | 'all' | 'pick';
   upTarget: number;
   downTarget: number;
   upGauge: number;

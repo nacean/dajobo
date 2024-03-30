@@ -21,10 +21,13 @@ const useElixir = () => {
 
   const [isUserSelectAdvice, setIsUserSelectAdvice] = useState<boolean>(false); //유저가 조언을 골랐는가? 골랐으면 효과 정제 차례
 
+  const [indexToAdjustAdvice, setIndexToAdjustAdvice] = useState<number | null>(null); //effect 선택형 조언 일때 사용
+
   const [round, setRound] = useState(0); // 몇번째 정재인지 (기본은 0~13까지 가능)
 
   const { readString } = usePapaParse();
 
+  //TODO : func 0,1,2,3 합치기
   //func 0,2
   const regulateWeightThisTime = (advice: BasicAdvice) => {
     // 백업해두기
@@ -36,8 +39,21 @@ const useElixir = () => {
     //깊은 복사를 위한 deep copy
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    const regulatedEffects = updateEffectsWeight(copiedEffects, advice.target, refinedProbability);
-    setPickedEffects(regulatedEffects);
+    if (typeof advice.target === 'number') {
+      const regulatedEffects = updateEffectsWeight(
+        copiedEffects,
+        advice.target,
+        refinedProbability,
+      );
+      setPickedEffects(regulatedEffects);
+    } else if (advice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectsWeight(
+        copiedEffects,
+        indexToAdjustAdvice,
+        refinedProbability,
+      );
+      setPickedEffects(regulatedEffects);
+    }
   };
 
   //func 1,3
@@ -45,9 +61,21 @@ const useElixir = () => {
     const refinedProbability = advice.adviceNum === 3 ? -advice.probability : advice.probability;
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    const regulatedEffects = updateEffectsWeight(copiedEffects, advice.target, refinedProbability);
-
-    setPickedEffects(regulatedEffects);
+    if (typeof advice.target === 'number') {
+      const regulatedEffects = updateEffectsWeight(
+        copiedEffects,
+        advice.target,
+        refinedProbability,
+      );
+      setPickedEffects(regulatedEffects);
+    } else if (advice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectsWeight(
+        copiedEffects,
+        indexToAdjustAdvice,
+        refinedProbability,
+      );
+      setPickedEffects(regulatedEffects);
+    }
   };
 
   const getProposedEffects = useCallback((effects: Effect[]) => {
@@ -161,7 +189,12 @@ const useElixir = () => {
     if (isUserSelectAdvice) {
       return;
     }
+    setIndexToAdjustAdvice(null);
     setPickedAdvice(advice);
+  };
+
+  const pickEffectIndex = (index: number) => {
+    setIndexToAdjustAdvice(index);
   };
 
   const elixirFuncs = [
@@ -177,6 +210,11 @@ const useElixir = () => {
       return;
     }
 
+    if (pickedAdvice.target === 'pick' && indexToAdjustAdvice === null) {
+      //TODO : effect 안골랐을때 notice 주기
+      return;
+    }
+
     elixirFuncs[pickedAdvice.adviceNum](pickedAdvice);
 
     // 이후 처리
@@ -186,7 +224,21 @@ const useElixir = () => {
   const executeMagic = () => {
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
     const newPickedEffects = pickEffectToUpdate(copiedEffects, 1);
-    setPickedEffects(newPickedEffects);
+
+    if (onlyThisTime.current) {
+      //이번 연성~ 은 확률 다시 되돌리기
+      setPickedEffects(
+        newPickedEffects.map((effect, index) => ({
+          ...effect,
+          pickWeight: lastPickedEffects[index].pickWeight,
+          greatWeight: lastPickedEffects[index].greatWeight,
+        })),
+      );
+      setLastPickedEffects([]);
+      onlyThisTime.current = false;
+    } else {
+      setPickedEffects(newPickedEffects);
+    }
 
     getProposedAdvices(basicAdvices);
     //TODO : advice 구현
@@ -195,11 +247,7 @@ const useElixir = () => {
     setRound(round + 1);
     setIsUserSelectAdvice(false);
     setPickedAdvice(null);
-    if (onlyThisTime.current) {
-      console.log(lastPickedEffects);
-      setPickedEffects(lastPickedEffects);
-      onlyThisTime.current = false;
-    }
+    setIndexToAdjustAdvice(null);
   };
 
   useEffect(() => {
@@ -218,6 +266,8 @@ const useElixir = () => {
     executeMagic,
     isUserSelectAdvice,
     pickedAdvice,
+    indexToAdjustAdvice,
+    pickEffectIndex,
   };
 };
 export default useElixir;
