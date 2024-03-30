@@ -65,7 +65,7 @@ const ElixirPage = () => {
             pickEffectIndex={pickEffectIndex}
           />
           <Button
-            disabled={!otherAdvicesCount}
+            disabled={!otherAdvicesCount || pickedEffects.length !== 5}
             variant="contained"
             css={styles.anotherAdviceButton}
             fullWidth
