@@ -20,6 +20,8 @@ const ElixirPage = () => {
     pickedAdvice,
     indexToAdjustAdvice,
     pickEffectIndex,
+    getOtherAdvices,
+    otherAdvicesCount,
   } = useElixir();
 
   const clickAdaptOrExecuteButton = () => {
@@ -55,12 +57,23 @@ const ElixirPage = () => {
                 />
               ))}
         </div>
-        <EffectList
-          pickedEffects={pickedEffects}
-          pickedAdvice={pickedAdvice}
-          indexToAdjustAdvice={indexToAdjustAdvice}
-          pickEffectIndex={pickEffectIndex}
-        />
+        <div css={styles.upperRightContainer}>
+          <EffectList
+            pickedEffects={pickedEffects}
+            pickedAdvice={pickedAdvice}
+            indexToAdjustAdvice={indexToAdjustAdvice}
+            pickEffectIndex={pickEffectIndex}
+          />
+          <Button
+            disabled={!otherAdvicesCount}
+            variant="contained"
+            css={styles.anotherAdviceButton}
+            fullWidth
+            onClick={getOtherAdvices}
+          >
+            {`다른 조언 보기(${otherAdvicesCount}회 가능)`}
+          </Button>
+        </div>
       </div>
       {pickedEffects.length === 5 && (
         <div css={styles.selectButtonContainer}>
@@ -88,6 +101,13 @@ const styles = createStyles({
     justifyContent: 'space-between',
     paddingInline: 48,
   },
+  upperRightContainer: {
+    width: '25%',
+    minHeight: 512,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
   advicePickContainer: {
     height: 680,
     border: '1px solid black',
@@ -106,6 +126,10 @@ const styles = createStyles({
   },
   selectButton: {
     width: 256,
+    height: 52,
+    fontSize: 20,
+  },
+  anotherAdviceButton: {
     height: 52,
     fontSize: 20,
   },

@@ -27,6 +27,9 @@ const useElixir = () => {
   const [roundRemoveCount, setroundRemoveCount] = useState<number>(1); //차감할 연성 기회 개수
   const [round, setRound] = useState(0); // 몇번째 정재인지 (기본은 0~13까지 가능)
 
+  //TODO : 이후 실 사용시 기본 2회로 변경
+  const [otherAdvicesCount, setOtherAdvicesCount] = useState<number>(9999); //다른 조언 보기 가능 횟수
+
   const { readString } = usePapaParse();
 
   //TODO : func 0,1,2,3 합치기
@@ -238,6 +241,15 @@ const useElixir = () => {
     [round],
   );
 
+  const getOtherAdvices = () => {
+    if (otherAdvicesCount === 0) {
+      return;
+    }
+
+    getProposedAdvices(basicAdvices);
+    setOtherAdvicesCount(otherAdvicesCount - 1);
+  };
+
   const getAllBasicAdvices = useCallback(async () => {
     const response = await fetch('csv/basicAdvices.csv');
     const reader = response.body?.getReader();
@@ -343,6 +355,8 @@ const useElixir = () => {
     pickedAdvice,
     indexToAdjustAdvice,
     pickEffectIndex,
+    getOtherAdvices,
+    otherAdvicesCount,
   };
 };
 export default useElixir;

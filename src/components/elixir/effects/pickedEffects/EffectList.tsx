@@ -1,4 +1,4 @@
-import { Button, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import PickedEffect from '@src/components/elixir/effects/pickedEffects/PickedEffect';
 import { createStyles } from '@src/utils/utils';
 import { Effect } from '@src/types/effect';
@@ -24,7 +24,7 @@ const EffectList: FC<Props> = ({
   };
 
   return (
-    <div css={styles.effectListContainer}>
+    <div>
       <RadioGroup
         aria-labelledby="demo-controlled-radio-buttons-group"
         name="controlled-radio-buttons-group"
@@ -42,25 +42,13 @@ const EffectList: FC<Props> = ({
           />
         ))}
       </RadioGroup>
-      <Button variant="contained" css={styles.anotherAdviceButton} fullWidth>
-        다른 조언 보기
-      </Button>
     </div>
   );
 };
 
 const styles = createStyles({
-  effectListContainer: {
-    width: '25%',
-    border: '1px solid black',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 8,
-    paddingInline: 8,
-    paddingBlock: 12,
-  },
   effects: {
+    border: '1px solid black',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -73,10 +61,6 @@ const styles = createStyles({
     width: '90%',
     height: 60,
     padding: 12,
-  },
-  anotherAdviceButton: {
-    height: 52,
-    fontSize: 20,
   },
 });
 
