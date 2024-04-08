@@ -229,13 +229,8 @@ const useElixir = () => {
     //깊은 복사를 위한 deep copy
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    if (typeof pickedAdvice.target === 'number') {
-      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
-      setPickedEffects(regulatedEffects);
-    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
-      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
-      setPickedEffects(regulatedEffects);
-    }
+    const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
+    setPickedEffects(regulatedEffects);
   };
 
   //func 13
@@ -246,13 +241,8 @@ const useElixir = () => {
 
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
-    if (typeof pickedAdvice.target === 'number') {
-      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
-      setPickedEffects(regulatedEffects);
-    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
-      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
-      setPickedEffects(regulatedEffects);
-    }
+    const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
+    setPickedEffects(regulatedEffects);
   };
 
   const getProposedEffects = useCallback((effects: Effect[]) => {
