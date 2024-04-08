@@ -133,3 +133,18 @@ export const updateEffectGreatWeight = (
 
   return newPickedEffects;
 };
+
+export const updateAllEffectsGreatWeight = (pickedEffects: Effect[], greatWeightToAdd: number) => {
+  const newPickedEffects = pickedEffects.map(pickedEffect => {
+    const newGreatWeightToAdd =
+      pickedEffect.greatWeight + greatWeightToAdd > 1
+        ? 1
+        : pickedEffect.greatWeight + greatWeightToAdd;
+
+    pickedEffect.greatWeight = newGreatWeightToAdd;
+
+    return pickedEffect;
+  });
+
+  return newPickedEffects;
+};

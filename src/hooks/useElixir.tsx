@@ -3,6 +3,8 @@ import { Effect } from '@src/types/effect';
 import {
   pickEffectToUpdate,
   pickEffectToUpdateSimultaneously,
+  updateAllEffectsGreatWeight,
+  updateEffectGreatWeight,
   updateEffectsWeight,
 } from '@src/utils/effectUtils';
 import { ParseResult } from 'papaparse';
@@ -167,6 +169,92 @@ const useElixir = () => {
     setRoundRemoveCount(2);
   };
 
+  //func 10
+  const regulateGreatWeightThisTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+    // 백업해두기
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateEffectGreatWeight(copiedEffects, pickedAdvice.target, 1);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectGreatWeight(copiedEffects, indexToAdjustAdvice, 1);
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
+  //func 11
+  const regulateGreatWeightAllTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateEffectGreatWeight(
+        copiedEffects,
+        pickedAdvice.target,
+        pickedAdvice.probability,
+      );
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectGreatWeight(
+        copiedEffects,
+        indexToAdjustAdvice,
+        pickedAdvice.probability,
+      );
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
+  //func 12
+  const regulateAllGreatWeightThisTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+    // 백업해두기
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
+  //func 13
+  const regulateAllGreatWeightAllTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateAllEffectsGreatWeight(copiedEffects, pickedAdvice.probability);
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -306,6 +394,10 @@ const useElixir = () => {
     gaugeThreeThisTimeUseRoundTwo,
     magicDoubleEffects,
     magicTripleEffects,
+    regulateGreatWeightThisTime,
+    regulateGreatWeightAllTime,
+    regulateAllGreatWeightThisTime,
+    regulateAllGreatWeightAllTime,
   ];
 
   const adaptAdvice = () => {
