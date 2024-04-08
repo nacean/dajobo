@@ -1,6 +1,10 @@
 import { BasicAdvice } from '@src/types/basicAdvice';
 import { Effect } from '@src/types/effect';
-import { pickEffectToUpdate, updateEffectsWeight } from '@src/utils/effectUtils';
+import {
+  pickEffectToUpdate,
+  pickEffectToUpdateSimultaneously,
+  updateEffectsWeight,
+} from '@src/utils/effectUtils';
 import { ParseResult } from 'papaparse';
 import Chooser from 'random-seed-weighted-chooser';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -23,8 +27,9 @@ const useElixir = () => {
 
   const [indexToAdjustAdvice, setIndexToAdjustAdvice] = useState<number | null>(null); //effect 선택형 조언 일때 사용
 
+  const [simulEffectCount, setSimulEffectCount] = useState<number>(1);
   const [gaugeUpdateCount, setGaugeUpdateCount] = useState<number>(1); //연성할 게이지 개수
-  const [roundRemoveCount, setroundRemoveCount] = useState<number>(1); //차감할 연성 기회 개수
+  const [roundRemoveCount, setRoundRemoveCount] = useState<number>(1); //차감할 연성 기회 개수
   const [round, setRound] = useState(0); // 몇번째 정재인지 (기본은 0~13까지 가능)
 
   //TODO : 이후 실 사용시 기본 2회로 변경
@@ -137,7 +142,7 @@ const useElixir = () => {
     }
 
     setGaugeUpdateCount(2);
-    setroundRemoveCount(2);
+    setRoundRemoveCount(2);
   };
 
   //func 6
@@ -148,7 +153,18 @@ const useElixir = () => {
   //func 7
   const gaugeThreeThisTimeUseRoundTwo = () => {
     setGaugeUpdateCount(3);
-    setroundRemoveCount(2);
+    setRoundRemoveCount(2);
+  };
+
+  //func 8
+  const magicDoubleEffects = () => {
+    setSimulEffectCount(2);
+  };
+
+  //func 9
+  const magicTripleEffects = () => {
+    setSimulEffectCount(3);
+    setRoundRemoveCount(2);
   };
 
   const getProposedEffects = useCallback((effects: Effect[]) => {
@@ -288,6 +304,8 @@ const useElixir = () => {
     snipeEffectUseRoundTwo,
     gaugeTwoThisTime,
     gaugeThreeThisTimeUseRoundTwo,
+    magicDoubleEffects,
+    magicTripleEffects,
   ];
 
   const adaptAdvice = () => {
@@ -309,7 +327,10 @@ const useElixir = () => {
 
   const executeMagic = () => {
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
-    const newPickedEffects = pickEffectToUpdate(copiedEffects, gaugeUpdateCount);
+    const newPickedEffects =
+      simulEffectCount === 1
+        ? pickEffectToUpdate(copiedEffects, gaugeUpdateCount)
+        : pickEffectToUpdateSimultaneously(copiedEffects, simulEffectCount);
 
     if (onlyThisTime.current) {
       //이번 연성~ 은 확률 다시 되돌리기
@@ -334,7 +355,8 @@ const useElixir = () => {
     setPickedAdvice(null);
     setIndexToAdjustAdvice(null);
     setGaugeUpdateCount(1);
-    setroundRemoveCount(1);
+    setRoundRemoveCount(1);
+    setSimulEffectCount(1);
   };
 
   useEffect(() => {

@@ -31,7 +31,7 @@ export const pickEffectToUpdate = (pickedEffects: Effect[], updateCount: number)
 
   //대성공 판별
   const greatWeightLine = Math.random();
-  console.log(greatWeightLine);
+
   if (newPickedEffects[indexToUpdate].greatWeight >= greatWeightLine && newUpdateCount > 0) {
     newUpdateCount += 1;
   }
@@ -46,6 +46,45 @@ export const pickEffectToUpdate = (pickedEffects: Effect[], updateCount: number)
   }
 
   newPickedEffects[indexToUpdate].gauge = newGauge;
+
+  return newPickedEffects;
+};
+
+export const pickEffectToUpdateSimultaneously = (pickedEffects: Effect[], simulCount: number) => {
+  const newPickedEffects = pickedEffects;
+
+  //index 선택
+  const pickWeightArray = pickedEffects.map(effect => effect.pickWeight);
+  const indexesToUpdate: number[] = [];
+
+  while (indexesToUpdate.length !== simulCount) {
+    const indexToUpdate = Chooser.chooseWeightedIndex(pickWeightArray);
+    if (!indexesToUpdate.includes(indexToUpdate)) {
+      indexesToUpdate.push(indexToUpdate);
+    }
+  }
+
+  indexesToUpdate.forEach(indexToUpdate => {
+    //대성공 판별
+    let newUpdateCount = 1;
+
+    const greatWeightLine = Math.random();
+
+    if (newPickedEffects[indexToUpdate].greatWeight >= greatWeightLine && newUpdateCount > 0) {
+      newUpdateCount += 1;
+    }
+
+    //게이지 설정
+    let newGauge = (newPickedEffects[indexToUpdate].gauge += newUpdateCount);
+
+    if (newGauge < 0) {
+      newGauge = 0;
+    } else if (newGauge >= 10) {
+      newGauge = 10;
+    }
+
+    newPickedEffects[indexToUpdate].gauge = newGauge;
+  });
 
   return newPickedEffects;
 };
