@@ -5,6 +5,7 @@ import {
   pickEffectToUpdateSimultaneously,
   updateAllEffectsGreatWeight,
   updateEffectGreatWeight,
+  updateEffectRandomGauge,
   updateEffectsWeight,
 } from '@src/utils/effectUtils';
 import { ParseResult } from 'papaparse';
@@ -245,6 +246,43 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //TODO: func 14,15 합치기
+  //func 14
+  const updateGaugeFromMinOneToPlusTwo = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateEffectRandomGauge(copiedEffects, pickedAdvice.target, -1, 2);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectRandomGauge(copiedEffects, indexToAdjustAdvice, -1, 2);
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
+  //func 15
+  const updateGaugeFromMinTwoToPlusTwo = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = updateEffectRandomGauge(copiedEffects, pickedAdvice.target, -2, 2);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectRandomGauge(copiedEffects, indexToAdjustAdvice, -2, 2);
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -388,6 +426,8 @@ const useElixir = () => {
     regulateGreatWeightAllTime,
     regulateAllGreatWeightThisTime,
     regulateAllGreatWeightAllTime,
+    updateGaugeFromMinOneToPlusTwo,
+    updateGaugeFromMinTwoToPlusTwo,
   ];
 
   const adaptAdvice = () => {

@@ -149,3 +149,38 @@ export const updateAllEffectsGreatWeight = (pickedEffects: Effect[], greatWeight
 
   return newPickedEffects;
 };
+
+export const updateEffectRandomGauge = (
+  effects: Effect[],
+  pikcedIndex: number,
+  minUpdateGauge: number,
+  maxUpdateGauge: number,
+) => {
+  const updateGaugeArray = [];
+
+  for (let i = minUpdateGauge; i <= maxUpdateGauge; i++) {
+    updateGaugeArray.push(i);
+  }
+
+  const gaugeToUpdate = updateGaugeArray[Chooser.chooseWeightedIndex(updateGaugeArray)];
+
+  const newEffects = effects.map((effect, index) => {
+    const newEffect = effect;
+    if (index === pikcedIndex) {
+      //게이지 설정
+      let newGauge = (effect.gauge += gaugeToUpdate);
+
+      if (newGauge < 0) {
+        newGauge = 0;
+      } else if (newGauge >= 10) {
+        newGauge = 10;
+      }
+
+      newEffect.gauge = newGauge;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};
