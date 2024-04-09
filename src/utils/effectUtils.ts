@@ -184,3 +184,33 @@ export const updateEffectRandomGauge = (
 
   return newEffects;
 };
+
+export const upEffectGaugeByRandom = (
+  effects: Effect[],
+  pikcedIndex: number,
+  upProbability: number,
+) => {
+  const randomNumber = Math.random();
+
+  if (randomNumber > upProbability) {
+    return effects;
+  }
+
+  const newEffects = effects.map((effect, index) => {
+    const newEffect = effect;
+    if (index === pikcedIndex) {
+      //게이지 설정
+      let newGauge = (effect.gauge += 1);
+
+      if (newGauge >= 10) {
+        newGauge = 10;
+      }
+
+      newEffect.gauge = newGauge;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};

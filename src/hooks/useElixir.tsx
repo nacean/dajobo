@@ -3,6 +3,7 @@ import { Effect } from '@src/types/effect';
 import {
   pickEffectToUpdate,
   pickEffectToUpdateSimultaneously,
+  upEffectGaugeByRandom,
   updateAllEffectsGreatWeight,
   updateEffectGreatWeight,
   updateEffectRandomGauge,
@@ -283,6 +284,32 @@ const useElixir = () => {
     }
   };
 
+  //func 16
+  const upPickedIndexGaugeOneRandomly = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = upEffectGaugeByRandom(
+        copiedEffects,
+        pickedAdvice.target,
+        pickedAdvice.probability,
+      );
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = upEffectGaugeByRandom(
+        copiedEffects,
+        indexToAdjustAdvice,
+        pickedAdvice.probability,
+      );
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -428,6 +455,7 @@ const useElixir = () => {
     regulateAllGreatWeightAllTime,
     updateGaugeFromMinOneToPlusTwo,
     updateGaugeFromMinTwoToPlusTwo,
+    upPickedIndexGaugeOneRandomly,
   ];
 
   const adaptAdvice = () => {
