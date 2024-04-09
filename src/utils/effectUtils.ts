@@ -96,6 +96,7 @@ export const updateEffectsWeight = (
 ) => {
   const newPickedEffects = pickedEffects;
   let newWeightToAdd = weightToAdd;
+  const weightToAddOthers = newWeightToAdd / 4;
 
   if (pickedEffects[index].pickWeight + newWeightToAdd > 1) {
     newWeightToAdd = 1 - pickedEffects[index].pickWeight;
@@ -107,12 +108,16 @@ export const updateEffectsWeight = (
     newPickedEffects[index].pickWeight += weightToAdd;
   }
 
-  const weightToAddOthers = newWeightToAdd / 4;
   for (let i = 0; i < newPickedEffects.length; i++) {
     if (i === index) {
       continue;
     }
-    newPickedEffects[i].pickWeight -= weightToAddOthers;
+
+    if (newPickedEffects[index].pickWeight === 1) {
+      newPickedEffects[i].pickWeight = 0;
+    } else {
+      newPickedEffects[i].pickWeight -= weightToAddOthers;
+    }
   }
 
   return newPickedEffects;
