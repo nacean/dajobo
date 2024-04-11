@@ -1,5 +1,5 @@
 import { createStyles } from '@src/utils/utils';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 
 interface Props {
   gauge: number;
@@ -8,15 +8,18 @@ interface Props {
 const EffectGauge: FC<Props> = ({ gauge }) => {
   const gaugeArray = [0, 0, 1, 0, 0, 2, 0, 3, 4, 5];
 
-  const defineBackgroundColor = (index: number) => {
-    if (gauge === 10) {
-      return 'red';
-    } else if (index + 1 <= gauge) {
-      return 'yellow';
-    } else {
-      return 'none';
-    }
-  };
+  const defineBackgroundColor = useCallback(
+    (index: number) => {
+      if (gauge === 10) {
+        return 'red';
+      } else if (index + 1 <= gauge) {
+        return 'yellow';
+      } else {
+        return undefined;
+      }
+    },
+    [gauge],
+  );
 
   return (
     <div css={styles.gaugeContainer}>
