@@ -1,8 +1,10 @@
 import { BasicAdvice } from '@src/types/basicAdvice';
 import { Effect } from '@src/types/effect';
 import {
+  changeEffectGaugeExactNumber,
   pickEffectToUpdate,
   pickEffectToUpdateSimultaneously,
+  upEffectGaugeByEvenly,
   upEffectGaugeByRandom,
   updateAllEffectsGreatWeight,
   updateEffectGreatWeight,
@@ -310,6 +312,46 @@ const useElixir = () => {
     }
   };
 
+  //func 17
+  const upEffectGaugeByEvenProbability = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = upEffectGaugeByEvenly(copiedEffects);
+
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 18
+  const changeEffectGaugeOneToTwo = () => {
+    if (pickedAdvice === null || typeof pickedAdvice.target !== 'number') {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = changeEffectGaugeExactNumber(copiedEffects, pickedAdvice.target, 1, 2);
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 10
+  const changeEffectGaugeTwoToThree = () => {
+    if (pickedAdvice === null || typeof pickedAdvice.target !== 'number') {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = changeEffectGaugeExactNumber(copiedEffects, pickedAdvice.target, 2, 3);
+    setPickedEffects(regulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -456,6 +498,9 @@ const useElixir = () => {
     updateGaugeFromMinOneToPlusTwo,
     updateGaugeFromMinTwoToPlusTwo,
     upPickedIndexGaugeOneRandomly,
+    upEffectGaugeByEvenProbability,
+    changeEffectGaugeOneToTwo,
+    changeEffectGaugeTwoToThree,
   ];
 
   const adaptAdvice = () => {

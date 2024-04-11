@@ -157,7 +157,7 @@ export const updateAllEffectsGreatWeight = (pickedEffects: Effect[], greatWeight
 
 export const updateEffectRandomGauge = (
   effects: Effect[],
-  pikcedIndex: number,
+  pickedIndex: number,
   minUpdateGauge: number,
   maxUpdateGauge: number,
 ) => {
@@ -171,7 +171,7 @@ export const updateEffectRandomGauge = (
 
   const newEffects = effects.map((effect, index) => {
     const newEffect = effect;
-    if (index === pikcedIndex) {
+    if (index === pickedIndex) {
       //게이지 설정
       let newGauge = (effect.gauge += gaugeToUpdate);
 
@@ -192,7 +192,7 @@ export const updateEffectRandomGauge = (
 
 export const upEffectGaugeByRandom = (
   effects: Effect[],
-  pikcedIndex: number,
+  pickedIndex: number,
   upProbability: number,
 ) => {
   const randomNumber = Math.random();
@@ -203,7 +203,7 @@ export const upEffectGaugeByRandom = (
 
   const newEffects = effects.map((effect, index) => {
     const newEffect = effect;
-    if (index === pikcedIndex) {
+    if (index === pickedIndex) {
       //게이지 설정
       let newGauge = (effect.gauge += 1);
 
@@ -212,6 +212,57 @@ export const upEffectGaugeByRandom = (
       }
 
       newEffect.gauge = newGauge;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};
+
+export const upEffectGaugeByEvenly = (effects: Effect[]) => {
+  const indexes = [0, 1, 2, 3, 4];
+
+  const pickedIndex = Chooser.chooseWeightedIndex(indexes);
+
+  const newEffects = effects.map((effect, index) => {
+    const newEffect = effect;
+    if (index === pickedIndex) {
+      //게이지 설정
+      let newGauge = (effect.gauge += 1);
+
+      if (newGauge >= 10) {
+        newGauge = 10;
+      }
+
+      newEffect.gauge = newGauge;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};
+
+export const changeEffectGaugeExactNumber = (
+  effects: Effect[],
+  pickedIndex: number,
+  minUpdateGauge: number,
+  maxUpdateGauge: number,
+) => {
+  const updateGaugeArray = [];
+
+  for (let i = minUpdateGauge; i <= maxUpdateGauge; i++) {
+    updateGaugeArray.push(i);
+  }
+
+  const gaugeToChange = updateGaugeArray[Chooser.chooseWeightedIndex(updateGaugeArray)];
+
+  const newEffects = effects.map((effect, index) => {
+    const newEffect = effect;
+    if (index === pickedIndex) {
+      //게이지 설정
+      newEffect.gauge = gaugeToChange;
     }
 
     return newEffect;
