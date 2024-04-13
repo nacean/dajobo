@@ -4,6 +4,7 @@ import {
   changeEffectGaugeExactNumber,
   pickEffectToUpdate,
   pickEffectToUpdateSimultaneously,
+  upAndDownTwoEffectGauges,
   upEffectGaugeByEvenly,
   upEffectGaugeByRandom,
   updateAllEffectsGreatWeight,
@@ -339,7 +340,7 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
-  //func 10
+  //func 19
   const changeEffectGaugeTwoToThree = () => {
     if (pickedAdvice === null || typeof pickedAdvice.target !== 'number') {
       return;
@@ -349,6 +350,25 @@ const useElixir = () => {
     const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
 
     const regulatedEffects = changeEffectGaugeExactNumber(copiedEffects, pickedAdvice.target, 2, 3);
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 20
+  const upAndDownTwoEffectGaugesExactly = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = upAndDownTwoEffectGauges(
+      copiedEffects,
+      pickedAdvice.upTarget,
+      pickedAdvice.downTarget,
+      pickedAdvice.upGauge,
+      pickedAdvice.downGauge,
+    );
     setPickedEffects(regulatedEffects);
   };
 
@@ -501,6 +521,7 @@ const useElixir = () => {
     upEffectGaugeByEvenProbability,
     changeEffectGaugeOneToTwo,
     changeEffectGaugeTwoToThree,
+    upAndDownTwoEffectGaugesExactly,
   ];
 
   const adaptAdvice = () => {

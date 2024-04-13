@@ -270,3 +270,25 @@ export const changeEffectGaugeExactNumber = (
 
   return newEffects;
 };
+
+export const upAndDownTwoEffectGauges = (
+  effects: Effect[],
+  upIndex: number,
+  downIndex: number,
+  upGauge: number,
+  downGauge: number,
+) => {
+  const newEffects = effects.map((effect, index) => {
+    const newEffect = effect;
+    if (index === upIndex && newEffect.gauge < 10) {
+      //게이지 설정
+      newEffect.gauge += upGauge;
+    } else if (index === downIndex && newEffect.gauge > 0) {
+      newEffect.gauge -= downGauge;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};
