@@ -278,7 +278,11 @@ export const upAndDownTwoEffectGauges = (
   downGauge: number,
 ) => {
   const upUpdatedEffects = upOrDownEffectGaugeExactNumber(effects, upIndex, upGauge);
-  const downUpdatedEffects = upOrDownEffectGaugeExactNumber(upUpdatedEffects, downIndex, downGauge);
+  const downUpdatedEffects = upOrDownEffectGaugeExactNumber(
+    upUpdatedEffects,
+    downIndex,
+    -downGauge,
+  );
 
   return downUpdatedEffects;
 };
