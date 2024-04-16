@@ -2,11 +2,15 @@ import { BasicAdvice } from '@src/types/basicAdvice';
 import { Effect } from '@src/types/effect';
 import {
   changeEffectGaugeExactNumber,
+  exchangeGaugeBetweenTwoEffects,
+  getLeastLowGaugeEffectIndex,
+  getMostHighGaugeEffectIndex,
   pickEffectToUpdate,
   pickEffectToUpdateSimultaneously,
   upAndDownTwoEffectGauges,
   upEffectGaugeByEvenly,
   upEffectGaugeByRandom,
+  upOrDownEffectGaugeExactNumber,
   updateAllEffectsGreatWeight,
   updateEffectGreatWeight,
   updateEffectRandomGauge,
@@ -372,6 +376,52 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //func 21
+  const exchangeMostAndLeastGaugeEffects = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const mostGaugeIndex = getMostHighGaugeEffectIndex(copiedEffects);
+    const leastGaugeIndex = getLeastLowGaugeEffectIndex(copiedEffects);
+
+    const regulatedEffects = exchangeGaugeBetweenTwoEffects(
+      copiedEffects,
+      mostGaugeIndex,
+      leastGaugeIndex,
+    );
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 22
+  const exchangeMostAndLeastGaugeEffectsButRemoveMostOneGauge = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const mostGaugeIndex = getMostHighGaugeEffectIndex(copiedEffects);
+    const leastGaugeIndex = getLeastLowGaugeEffectIndex(copiedEffects);
+
+    const oneGaugeRemovedEffects = upOrDownEffectGaugeExactNumber(
+      copiedEffects,
+      mostGaugeIndex,
+      -1,
+    );
+
+    const regulatedEffects = exchangeGaugeBetweenTwoEffects(
+      oneGaugeRemovedEffects,
+      mostGaugeIndex,
+      leastGaugeIndex,
+    );
+    setPickedEffects(regulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -522,6 +572,8 @@ const useElixir = () => {
     changeEffectGaugeOneToTwo,
     changeEffectGaugeTwoToThree,
     upAndDownTwoEffectGaugesExactly,
+    exchangeMostAndLeastGaugeEffects,
+    exchangeMostAndLeastGaugeEffectsButRemoveMostOneGauge,
   ];
 
   const adaptAdvice = () => {

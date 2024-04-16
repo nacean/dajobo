@@ -190,25 +190,22 @@ export const updateEffectRandomGauge = (
   return newEffects;
 };
 
-export const upEffectGaugeByRandom = (
+export const upOrDownEffectGaugeExactNumber = (
   effects: Effect[],
   pickedIndex: number,
-  upProbability: number,
+  gaugeToUpdate: number,
 ) => {
-  const randomNumber = Math.random();
-
-  if (randomNumber > upProbability) {
-    return effects;
-  }
-
   const newEffects = effects.map((effect, index) => {
     const newEffect = effect;
     if (index === pickedIndex) {
       //게이지 설정
-      let newGauge = (effect.gauge += 1);
+      let newGauge = (effect.gauge += gaugeToUpdate);
 
       if (newGauge >= 10) {
         newGauge = 10;
+      }
+      if (newGauge <= 0) {
+        newGauge = 0;
       }
 
       newEffect.gauge = newGauge;
@@ -220,26 +217,28 @@ export const upEffectGaugeByRandom = (
   return newEffects;
 };
 
+export const upEffectGaugeByRandom = (
+  effects: Effect[],
+  pickedIndex: number,
+  upProbability: number,
+) => {
+  const randomNumber = Math.random();
+
+  if (randomNumber > upProbability) {
+    return effects;
+  }
+
+  const newEffects = upOrDownEffectGaugeExactNumber(effects, pickedIndex, 1);
+
+  return newEffects;
+};
+
 export const upEffectGaugeByEvenly = (effects: Effect[]) => {
   const indexes = [0, 1, 2, 3, 4];
 
   const pickedIndex = Chooser.chooseWeightedIndex(indexes);
 
-  const newEffects = effects.map((effect, index) => {
-    const newEffect = effect;
-    if (index === pickedIndex) {
-      //게이지 설정
-      let newGauge = (effect.gauge += 1);
-
-      if (newGauge >= 10) {
-        newGauge = 10;
-      }
-
-      newEffect.gauge = newGauge;
-    }
-
-    return newEffect;
-  });
+  const newEffects = upOrDownEffectGaugeExactNumber(effects, pickedIndex, 1);
 
   return newEffects;
 };
@@ -278,13 +277,56 @@ export const upAndDownTwoEffectGauges = (
   upGauge: number,
   downGauge: number,
 ) => {
+  const upUpdatedEffects = upOrDownEffectGaugeExactNumber(effects, upIndex, upGauge);
+  const downUpdatedEffects = upOrDownEffectGaugeExactNumber(upUpdatedEffects, downIndex, downGauge);
+
+  return downUpdatedEffects;
+};
+
+export const getMostHighGaugeEffectIndex = (effects: Effect[]) => {
+  let mostGauge = 0;
+  let mostGaugeIndex = 0;
+
+  effects.forEach((effect, index) => {
+    if (mostGauge <= effect.gauge) {
+      mostGauge = effect.gauge;
+      mostGaugeIndex = index;
+    }
+  });
+
+  return mostGaugeIndex;
+};
+
+export const getLeastLowGaugeEffectIndex = (effects: Effect[]) => {
+  let leastGauge = 10;
+  let leastGaugeIndex = 0;
+
+  effects.forEach((effect, index) => {
+    if (leastGauge >= effect.gauge) {
+      leastGauge = effect.gauge;
+      leastGaugeIndex = index;
+    }
+  });
+
+  return leastGaugeIndex;
+};
+
+export const exchangeGaugeBetweenTwoEffects = (
+  effects: Effect[],
+  firstIndex: number,
+  secondIndex: number,
+) => {
+  const firstIndexGauge = effects[firstIndex].gauge;
+  const secondIndexGauge = effects[secondIndex].gauge;
+
   const newEffects = effects.map((effect, index) => {
     const newEffect = effect;
-    if (index === upIndex && newEffect.gauge < 10) {
-      //게이지 설정
-      newEffect.gauge += upGauge;
-    } else if (index === downIndex && newEffect.gauge > 0) {
-      newEffect.gauge -= downGauge;
+
+    if (index === firstIndex) {
+      newEffect.gauge = secondIndexGauge;
+    }
+    if (index === secondIndex) {
+      newEffect.gauge = firstIndexGauge;
     }
 
     return newEffect;
