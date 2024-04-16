@@ -439,6 +439,29 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //func 24
+  const exchangeGaugeBetweenTwoSelectedEffectsButRemoveOneGauge = () => {
+    if (pickedAdvice === null || typeof pickedAdvice.target !== 'number') {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const oneGaugeRemovedEffects = upOrDownEffectGaugeExactNumber(
+      copiedEffects,
+      pickedAdvice.target,
+      -1,
+    );
+
+    const regulatedEffects = exchangeGaugeBetweenTwoEffects(
+      oneGaugeRemovedEffects,
+      pickedAdvice.upTarget,
+      pickedAdvice.downTarget,
+    );
+    setPickedEffects(regulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -592,6 +615,7 @@ const useElixir = () => {
     exchangeMostAndLeastGaugeEffects,
     exchangeMostAndLeastGaugeEffectsButRemoveMostOneGauge,
     exchangeGaugeBetweenTwoSelectedEffects,
+    exchangeGaugeBetweenTwoSelectedEffectsButRemoveOneGauge,
   ];
 
   const adaptAdvice = () => {
