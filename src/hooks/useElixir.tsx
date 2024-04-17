@@ -537,6 +537,22 @@ const useElixir = () => {
     setPickedEffects(finalRegulatedEffects);
   };
 
+  //func 28
+  const upMostGaugeEffectOneGauge = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const mostGaugeIndex = getMostHighGaugeEffectIndex(copiedEffects);
+
+    const regulatedEffects = upOrDownEffectGaugeExactNumber(copiedEffects, mostGaugeIndex, 1);
+
+    setPickedEffects(regulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -694,6 +710,7 @@ const useElixir = () => {
     upLeastGaugeEffectByUpGauge,
     upLeastGaugeEffectButDownMostGaugeEffect,
     upLeastGaugeEffectButDownRandomGaugeEffect,
+    upMostGaugeEffectOneGauge,
   ];
 
   const adaptAdvice = () => {
