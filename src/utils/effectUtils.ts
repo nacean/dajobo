@@ -338,3 +338,18 @@ export const exchangeGaugeBetweenTwoEffects = (
 
   return newEffects;
 };
+
+export const getRandomEffectIndexExceptPickedIndex = (pickedIndex: number) => {
+  const indexes: number[] = [];
+  for (let i = 0; i < 5; i++) {
+    if (i !== pickedIndex) {
+      indexes.push(i);
+    }
+  }
+
+  const randomPickedEffectIndex = Chooser.chooseWeightedIndex(indexes);
+
+  const randomPickedIndex = indexes[randomPickedEffectIndex];
+
+  return randomPickedIndex;
+};
