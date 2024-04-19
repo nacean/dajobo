@@ -553,6 +553,60 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //func 29
+  const upMostGaugeEffectButDownLeastGaugeEffect = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const mostGaugeIndex = getMostHighGaugeEffectIndex(copiedEffects);
+    const leastGaugeIndex = getLeastLowGaugeEffectIndex(copiedEffects);
+
+    const leastGaugeRegulatedEffects = upOrDownEffectGaugeExactNumber(
+      copiedEffects,
+      leastGaugeIndex,
+      pickedAdvice.downGauge,
+    );
+
+    const finalRegulatedEffects = upOrDownEffectGaugeExactNumber(
+      leastGaugeRegulatedEffects,
+      mostGaugeIndex,
+      pickedAdvice.upGauge,
+    );
+
+    setPickedEffects(finalRegulatedEffects);
+  };
+
+  //func 30
+  const upMostGaugeEffectButDownRandomGaugeEffect = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const mostGaugeIndex = getMostHighGaugeEffectIndex(copiedEffects);
+    const randomGaugeIndex = getRandomEffectIndexExceptPickedIndex(mostGaugeIndex);
+
+    const randomGaugeRegulatedEffects = upOrDownEffectGaugeExactNumber(
+      copiedEffects,
+      randomGaugeIndex,
+      pickedAdvice.downGauge,
+    );
+
+    const finalRegulatedEffects = upOrDownEffectGaugeExactNumber(
+      randomGaugeRegulatedEffects,
+      mostGaugeIndex,
+      pickedAdvice.upGauge,
+    );
+
+    setPickedEffects(finalRegulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -711,6 +765,8 @@ const useElixir = () => {
     upLeastGaugeEffectButDownMostGaugeEffect,
     upLeastGaugeEffectButDownRandomGaugeEffect,
     upMostGaugeEffectOneGauge,
+    upMostGaugeEffectButDownLeastGaugeEffect,
+    upMostGaugeEffectButDownRandomGaugeEffect,
   ];
 
   const adaptAdvice = () => {
