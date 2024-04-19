@@ -8,6 +8,7 @@ import {
   getRandomEffectIndexExceptPickedIndex,
   pickEffectToUpdate,
   pickEffectToUpdateSimultaneously,
+  upAllEffectThatGaugesUnderNumber,
   upAndDownTwoEffectGauges,
   upEffectGaugeByEvenly,
   upEffectGaugeByRandom,
@@ -607,6 +608,34 @@ const useElixir = () => {
     setPickedEffects(finalRegulatedEffects);
   };
 
+  //func 31
+  const upAllEffectThatGaugeIsZero = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = upAllEffectThatGaugesUnderNumber(copiedEffects, 0);
+
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 32
+  const upAllEffectThatGaugeIsUnderTwo = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = upAllEffectThatGaugesUnderNumber(copiedEffects, 2);
+
+    setPickedEffects(regulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -767,6 +796,8 @@ const useElixir = () => {
     upMostGaugeEffectOneGauge,
     upMostGaugeEffectButDownLeastGaugeEffect,
     upMostGaugeEffectButDownRandomGaugeEffect,
+    upAllEffectThatGaugeIsZero,
+    upAllEffectThatGaugeIsUnderTwo,
   ];
 
   const adaptAdvice = () => {

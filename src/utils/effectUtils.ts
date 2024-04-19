@@ -353,3 +353,17 @@ export const getRandomEffectIndexExceptPickedIndex = (pickedIndex: number) => {
 
   return randomPickedIndex;
 };
+
+export const upAllEffectThatGaugesUnderNumber = (effects: Effect[], maxGaugeNumber: number) => {
+  const newEffects = effects.map(effect => {
+    const newEffect = effect;
+
+    if (newEffect.gauge <= maxGaugeNumber) {
+      newEffect.gauge += 1;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};
