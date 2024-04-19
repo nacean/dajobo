@@ -13,6 +13,7 @@ import {
   upEffectGaugeByEvenly,
   upEffectGaugeByRandom,
   upOrDownEffectGaugeExactNumber,
+  upOrDownEffectsArrayGaugeExactNumber,
   updateAllEffectsGreatWeight,
   updateEffectGreatWeight,
   updateEffectRandomGauge,
@@ -636,6 +637,52 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //func 33
+  const upEvenIndexEffectsDownOddIndexEffects = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const oddIndexes = [1, 3];
+    const evenIndexes = [0, 2, 4];
+
+    const upRegulatedEffects = upOrDownEffectsArrayGaugeExactNumber(copiedEffects, evenIndexes, 1);
+
+    const finalRegulatedEffects = upOrDownEffectsArrayGaugeExactNumber(
+      upRegulatedEffects,
+      oddIndexes,
+      -2,
+    );
+
+    setPickedEffects(finalRegulatedEffects);
+  };
+
+  //func 34
+  const upOddIndexEffectsDownEvenIndexEffects = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const oddIndexes = [1, 3];
+    const evenIndexes = [0, 2, 4];
+
+    const upRegulatedEffects = upOrDownEffectsArrayGaugeExactNumber(copiedEffects, oddIndexes, 1);
+
+    const finalRegulatedEffects = upOrDownEffectsArrayGaugeExactNumber(
+      upRegulatedEffects,
+      evenIndexes,
+      -2,
+    );
+
+    setPickedEffects(finalRegulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -798,6 +845,8 @@ const useElixir = () => {
     upMostGaugeEffectButDownRandomGaugeEffect,
     upAllEffectThatGaugeIsZero,
     upAllEffectThatGaugeIsUnderTwo,
+    upEvenIndexEffectsDownOddIndexEffects,
+    upOddIndexEffectsDownEvenIndexEffects,
   ];
 
   const adaptAdvice = () => {

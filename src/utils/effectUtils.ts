@@ -217,6 +217,33 @@ export const upOrDownEffectGaugeExactNumber = (
   return newEffects;
 };
 
+export const upOrDownEffectsArrayGaugeExactNumber = (
+  effects: Effect[],
+  pickedIndexes: number[],
+  gaugeToUpdate: number,
+) => {
+  const newEffects = effects.map((effect, index) => {
+    const newEffect = effect;
+    if (pickedIndexes.includes(index)) {
+      //게이지 설정
+      let newGauge = (effect.gauge += gaugeToUpdate);
+
+      if (newGauge >= 10) {
+        newGauge = 10;
+      }
+      if (newGauge <= 0) {
+        newGauge = 0;
+      }
+
+      newEffect.gauge = newGauge;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};
+
 export const upEffectGaugeByRandom = (
   effects: Effect[],
   pickedIndex: number,
