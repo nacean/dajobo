@@ -6,6 +6,7 @@ import {
   getLeastLowGaugeEffectIndex,
   getMostHighGaugeEffectIndex,
   getRandomEffectIndexExceptPickedIndex,
+  lockEffect,
   pickEffectToUpdate,
   pickEffectToUpdateSimultaneously,
   upAllEffectThatGaugesUnderNumber,
@@ -683,6 +684,51 @@ const useElixir = () => {
     setPickedEffects(finalRegulatedEffects);
   };
 
+  //func 35
+  const lockRandomEffect = () => {
+    const indexesToLock = [];
+
+    for (let i = 0; i < 5; i++) {
+      if (!pickedEffects[i].isLocked) {
+        indexesToLock.push(i);
+      }
+    }
+
+    const indexToLock = Chooser.chooseWeightedIndex(indexesToLock);
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = lockEffect(copiedEffects, indexesToLock[indexToLock]);
+
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 36
+  const lockPickedEffectButUseTwoRound = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (typeof pickedAdvice.target === 'number') {
+      const regulatedEffects = lockEffect(copiedEffects, pickedAdvice.target);
+      setPickedEffects(regulatedEffects);
+    } else if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = lockEffect(copiedEffects, indexToAdjustAdvice);
+      setPickedEffects(regulatedEffects);
+    }
+
+    setRoundRemoveCount(2);
+  };
+
+  //func 37
+  const discountCost = () => {
+    //do nothing
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -847,6 +893,9 @@ const useElixir = () => {
     upAllEffectThatGaugeIsUnderTwo,
     upEvenIndexEffectsDownOddIndexEffects,
     upOddIndexEffectsDownEvenIndexEffects,
+    lockRandomEffect,
+    lockPickedEffectButUseTwoRound,
+    discountCost,
   ];
 
   const adaptAdvice = () => {

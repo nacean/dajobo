@@ -394,3 +394,18 @@ export const upAllEffectThatGaugesUnderNumber = (effects: Effect[], maxGaugeNumb
 
   return newEffects;
 };
+
+export const lockEffect = (effects: Effect[], indexToLock: number) => {
+  const newEffects = effects.map((effect, index) => {
+    const newEffect = effect;
+
+    if (index === indexToLock) {
+      newEffect.isLocked = true;
+      newEffect.pickWeight = 0;
+    }
+
+    return newEffect;
+  });
+
+  return newEffects;
+};
