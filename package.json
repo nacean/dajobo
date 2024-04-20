@@ -13,8 +13,11 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.14",
+    "@types/papaparse": "^5.3.14",
+    "random-seed-weighted-chooser": "^1.1.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-papaparse": "^4.4.0",
     "styled-components": "^6.1.8",
     "styled-reset": "^4.5.2"
   },
