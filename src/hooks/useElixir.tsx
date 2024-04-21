@@ -501,7 +501,7 @@ const useElixir = () => {
     const mostGaugeRegulatedEffects = upOrDownEffectGaugeExactNumber(
       copiedEffects,
       mostGaugeIndex,
-      pickedAdvice.downGauge,
+      -pickedAdvice.downGauge,
     );
 
     const finalRegulatedEffects = upOrDownEffectGaugeExactNumber(
@@ -528,7 +528,7 @@ const useElixir = () => {
     const mostGaugeRegulatedEffects = upOrDownEffectGaugeExactNumber(
       copiedEffects,
       randomGaugeIndex,
-      pickedAdvice.downGauge,
+      -pickedAdvice.downGauge,
     );
 
     const finalRegulatedEffects = upOrDownEffectGaugeExactNumber(
@@ -571,7 +571,7 @@ const useElixir = () => {
     const leastGaugeRegulatedEffects = upOrDownEffectGaugeExactNumber(
       copiedEffects,
       leastGaugeIndex,
-      pickedAdvice.downGauge,
+      -pickedAdvice.downGauge,
     );
 
     const finalRegulatedEffects = upOrDownEffectGaugeExactNumber(
@@ -598,7 +598,7 @@ const useElixir = () => {
     const randomGaugeRegulatedEffects = upOrDownEffectGaugeExactNumber(
       copiedEffects,
       randomGaugeIndex,
-      pickedAdvice.downGauge,
+      -pickedAdvice.downGauge,
     );
 
     const finalRegulatedEffects = upOrDownEffectGaugeExactNumber(
