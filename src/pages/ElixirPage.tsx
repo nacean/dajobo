@@ -47,6 +47,7 @@ const ElixirPage = () => {
                   pickAdvice={pickAdvice}
                   key={advice.explain + index}
                   isPicked={advice === pickedAdvice}
+                  pickedEffects={pickedEffects}
                 />
               ))
             : proposedEffects.map((effect, index) => (

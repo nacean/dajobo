@@ -2,14 +2,22 @@ import { Button } from '@mui/material';
 import { createStyles } from '@src/utils/utils';
 import { BasicAdvice } from '@src/types/basicAdvice';
 import { FC } from 'react';
+import { Effect } from '@src/types/effect';
 
 interface Props {
   advice: BasicAdvice;
   pickAdvice: (advice: BasicAdvice) => void;
   isPicked: boolean;
+  pickedEffects: Effect[];
 }
 
-const Advice: FC<Props> = ({ advice, pickAdvice, isPicked }) => {
+const Advice: FC<Props> = ({ advice, pickAdvice, isPicked, pickedEffects }) => {
+  let refinedExplain = advice.explain;
+
+  pickedEffects.forEach((effect, index) => {
+    refinedExplain = refinedExplain.replace(`{${index}}`, `"${effect.effectName}"`);
+  });
+
   return (
     <div css={styles.container}>
       <div css={styles.stackContainer}>
@@ -26,7 +34,7 @@ const Advice: FC<Props> = ({ advice, pickAdvice, isPicked }) => {
           pickAdvice(advice);
         }}
       >
-        {advice.explain}
+        {refinedExplain}
       </Button>
     </div>
   );

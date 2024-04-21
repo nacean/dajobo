@@ -395,6 +395,7 @@ export const upAllEffectThatGaugesUnderNumber = (effects: Effect[], maxGaugeNumb
   return newEffects;
 };
 
+//TODO: lock 할 때 pickWeight 0 만들고, 다른 확률도 조정해야함. 버그있음.(총합 100%가 아님)
 export const lockEffect = (effects: Effect[], indexToLock: number) => {
   const newEffects = effects.map((effect, index) => {
     const newEffect = effect;
