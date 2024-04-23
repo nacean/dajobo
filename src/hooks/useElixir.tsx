@@ -755,6 +755,34 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //func 40
+  const upAllEffectThatGaugeIsUnderFour = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = upAllEffectThatGaugesUnderNumber(copiedEffects, 4);
+
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 41
+  const upAllEffectThatGaugeIsUnderSix = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const regulatedEffects = upAllEffectThatGaugesUnderNumber(copiedEffects, 6);
+
+    setPickedEffects(regulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -924,6 +952,8 @@ const useElixir = () => {
     discountCost,
     changeEffectGaugeThreeToFour,
     changeEffectGaugeFiveToSix,
+    upAllEffectThatGaugeIsUnderFour,
+    upAllEffectThatGaugeIsUnderSix,
   ];
 
   const adaptAdvice = () => {
