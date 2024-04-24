@@ -1,4 +1,4 @@
-import { BasicAdvice } from '@src/types/basicAdvice';
+import { AdviceType } from '@src/types/basicAdvice';
 import { Effect } from '@src/types/effect';
 import {
   changeEffectGaugeExactNumber,
@@ -34,9 +34,9 @@ const useElixir = () => {
 
   const [pickedEffects, setPickedEffects] = useState<Effect[]>([]); // 내가 뽑은 효과(총 5개)
 
-  const [basicAdvices, setBasicAdvices] = useState<BasicAdvice[]>([]); // 기초 조언 전체
-  const [proposedAdvices, setProposedAdvices] = useState<BasicAdvice[]>([]); // 현자가 제안하는 조언 3가지
-  const [pickedAdvice, setPickedAdvice] = useState<BasicAdvice | null>(null); // 유저가 선택한 조언
+  const [basicAdvices, setBasicAdvices] = useState<AdviceType[]>([]); // 기초 조언 전체
+  const [proposedAdvices, setProposedAdvices] = useState<AdviceType[]>([]); // 현자가 제안하는 조언 3가지
+  const [pickedAdvice, setPickedAdvice] = useState<AdviceType | null>(null); // 유저가 선택한 조언
 
   const [isUserSelectAdvice, setIsUserSelectAdvice] = useState<boolean>(false); //유저가 조언을 골랐는가? 골랐으면 효과 정제 차례
 
@@ -855,16 +855,16 @@ const useElixir = () => {
   };
 
   const getProposedAdvices = useCallback(
-    (advices: BasicAdvice[]) => {
+    (advices: AdviceType[]) => {
       //TODO : 질서, 혼돈 등 다른 조언도 추가?
       if (advices.length === 0) {
         return;
       }
 
-      const newAdvicesToUpdate: BasicAdvice[] = [];
+      const newAdvicesToUpdate: AdviceType[] = [];
 
       for (let i = 0; i < 3; i++) {
-        const newAdvice = Chooser.chooseWeightedObject(advices, 'weight' + round) as BasicAdvice;
+        const newAdvice = Chooser.chooseWeightedObject(advices, 'weight' + round) as AdviceType;
         newAdvicesToUpdate.push(newAdvice);
       }
 
@@ -892,14 +892,14 @@ const useElixir = () => {
       header: true,
       worker: true,
       dynamicTyping: true,
-      complete: (result: ParseResult<BasicAdvice>) => {
+      complete: (result: ParseResult<AdviceType>) => {
         setBasicAdvices(result.data);
         getProposedAdvices(result.data);
       },
     });
   }, [getProposedAdvices, readString]);
 
-  const pickAdvice = (advice: BasicAdvice) => {
+  const pickAdvice = (advice: AdviceType) => {
     if (isUserSelectAdvice) {
       return;
     }

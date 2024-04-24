@@ -8,6 +8,7 @@ export interface AdviceType {
   downGauge: number;
   probability: number;
   //notAppear : number[] ?
+  weight: number;
   weight0: number;
   weight1: number;
   weight2: number;

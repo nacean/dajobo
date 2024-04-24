@@ -3,11 +3,11 @@ import PickedEffect from '@src/components/elixir/effects/pickedEffects/PickedEff
 import { createStyles } from '@src/utils/utils';
 import { Effect } from '@src/types/effect';
 import { FC } from 'react';
-import { BasicAdvice } from '@src/types/basicAdvice';
+import { AdviceType } from '@src/types/basicAdvice';
 
 interface Props {
   pickedEffects: Effect[];
-  pickedAdvice: BasicAdvice | null;
+  pickedAdvice: AdviceType | null;
   indexToAdjustAdvice: number | null;
   pickEffectIndex: (index: number) => void;
 }

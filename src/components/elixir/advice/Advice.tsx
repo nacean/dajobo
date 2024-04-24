@@ -1,12 +1,12 @@
 import { Button } from '@mui/material';
 import { createStyles } from '@src/utils/utils';
-import { BasicAdvice } from '@src/types/basicAdvice';
+import { AdviceType } from '@src/types/basicAdvice';
 import { FC } from 'react';
 import { Effect } from '@src/types/effect';
 
 interface Props {
-  advice: BasicAdvice;
-  pickAdvice: (advice: BasicAdvice) => void;
+  advice: AdviceType;
+  pickAdvice: (advice: AdviceType) => void;
   isPicked: boolean;
   pickedEffects: Effect[];
 }
