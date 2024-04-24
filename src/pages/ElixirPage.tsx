@@ -22,6 +22,7 @@ const ElixirPage = () => {
     pickEffectIndex,
     getOtherAdvices,
     otherAdvicesCount,
+    lawStacks,
   } = useElixir();
 
   const clickAdaptOrExecuteButton = () => {
@@ -48,6 +49,7 @@ const ElixirPage = () => {
                   key={advice.explain + index}
                   isPicked={advice === pickedAdvice}
                   pickedEffects={pickedEffects}
+                  lawStack={lawStacks[index]}
                 />
               ))
             : proposedEffects.map((effect, index) => (

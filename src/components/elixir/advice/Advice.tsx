@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { createStyles } from '@src/utils/utils';
 import { AdviceType } from '@src/types/basicAdvice';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { Effect } from '@src/types/effect';
 
 interface Props {
@@ -9,22 +9,36 @@ interface Props {
   pickAdvice: (advice: AdviceType) => void;
   isPicked: boolean;
   pickedEffects: Effect[];
+  lawStack: number;
 }
 
-const Advice: FC<Props> = ({ advice, pickAdvice, isPicked, pickedEffects }) => {
+const Advice: FC<Props> = ({ advice, pickAdvice, isPicked, pickedEffects, lawStack }) => {
   let refinedExplain = advice.explain;
 
   pickedEffects.forEach((effect, index) => {
     refinedExplain = refinedExplain.replace(`{${index}}`, `"${effect.effectName}"`);
   });
 
+  const getStacks = useCallback(() => {
+    const stacks: JSX.Element[] = [];
+
+    if (lawStack > 0) {
+      for (let i = 0; i < 3; i++) {
+        stacks.push(
+          <div
+            css={styles.stack}
+            style={{ backgroundColor: i < lawStack ? '#2962ff' : undefined }}
+          />,
+        );
+      }
+    }
+
+    return <div css={styles.stackContainer}>{stacks}</div>;
+  }, [lawStack]);
+
   return (
     <div css={styles.container}>
-      <div css={styles.stackContainer}>
-        <div css={styles.stack} />
-        <div css={styles.stack} />
-        <div css={styles.stack} />
-      </div>
+      {getStacks()}
       <Button
         variant="outlined"
         color="info"

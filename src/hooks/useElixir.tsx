@@ -42,6 +42,8 @@ const useElixir = () => {
 
   const [indexToAdjustAdvice, setIndexToAdjustAdvice] = useState<number | null>(null); //effect 선택형 조언 일때 사용
 
+  const [lawStacks, setLawStacks] = useState<number[]>([0, 0, 0]); //질서 스택
+
   const [simulEffectCount, setSimulEffectCount] = useState<number>(1);
   const [gaugeUpdateCount, setGaugeUpdateCount] = useState<number>(1); //연성할 게이지 개수
   const [roundRemoveCount, setRoundRemoveCount] = useState<number>(1); //차감할 연성 기회 개수
@@ -903,6 +905,7 @@ const useElixir = () => {
     if (isUserSelectAdvice) {
       return;
     }
+
     setIndexToAdjustAdvice(null);
     setPickedAdvice(advice);
   };
@@ -995,6 +998,16 @@ const useElixir = () => {
       setPickedEffects(newPickedEffects);
     }
 
+    const newLawStacks = lawStacks.map((lawStack, index) => {
+      //질서 스택 갱신
+      if (proposedAdvices[index] !== pickedAdvice) {
+        return 0;
+      }
+
+      return (lawStack + 1) % 4;
+    });
+
+    setLawStacks(newLawStacks);
     getProposedAdvices(basicAdvices);
     setRound(round + roundRemoveCount);
 
@@ -1027,6 +1040,7 @@ const useElixir = () => {
     pickEffectIndex,
     getOtherAdvices,
     otherAdvicesCount,
+    lawStacks,
   };
 };
 export default useElixir;
