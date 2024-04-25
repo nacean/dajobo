@@ -38,6 +38,7 @@ const useElixir = () => {
   const [lawAdvices, setLawAdvices] = useState<AdviceType[]>([]); // 질서 조언 전체
   const [proposedAdvices, setProposedAdvices] = useState<AdviceType[]>([]); // 현자가 제안하는 조언 3가지
   const [pickedAdvice, setPickedAdvice] = useState<AdviceType | null>(null); // 유저가 선택한 조언
+  const [pickedAdviceIndex, setPickedAdviceIndex] = useState<number | null>(null); //유저가 선택한 조언 index
 
   const [isUserSelectAdvice, setIsUserSelectAdvice] = useState<boolean>(false); //유저가 조언을 골랐는가? 골랐으면 효과 정제 차례
 
@@ -786,6 +787,47 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //---------------------------------------------------------------------
+  // 질서 조언
+
+  //func 0,1
+  const lawRegulatePickWeightAllTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    const refinedProbability =
+      pickedAdvice.adviceNum === 1 ? -pickedAdvice.probability : pickedAdvice.probability;
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectsWeight(
+        copiedEffects,
+        indexToAdjustAdvice,
+        refinedProbability,
+      );
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
+  //func 2
+  const lawRegulatePickGreatWeightAllTime = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectGreatWeight(
+        copiedEffects,
+        indexToAdjustAdvice,
+        pickedAdvice.probability,
+      );
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -861,15 +903,18 @@ const useElixir = () => {
     (advices?: AdviceType[], newLawStacks?: number[]) => {
       //TODO : 질서, 혼돈 등 다른 조언도 추가?
 
+      const tempBasicAdvices = advices ? advices : basicAdvices;
+      const tempLawStacks = newLawStacks ? newLawStacks : lawStacks;
+
       const newAdvicesToUpdate: AdviceType[] = [];
 
       for (let i = 0; i < 3; i++) {
-        if (newLawStacks && newLawStacks[i] === 3) {
+        if (tempLawStacks[i] === 3) {
           const newAdvice = Chooser.chooseWeightedObject(lawAdvices, 'weight') as AdviceType;
           newAdvicesToUpdate.push(newAdvice);
         } else {
           const newAdvice = Chooser.chooseWeightedObject(
-            advices ? advices : basicAdvices,
+            tempBasicAdvices,
             'weight' + round,
           ) as AdviceType;
           newAdvicesToUpdate.push(newAdvice);
@@ -878,7 +923,7 @@ const useElixir = () => {
 
       setProposedAdvices(newAdvicesToUpdate);
     },
-    [basicAdvices, lawAdvices, round],
+    [basicAdvices, lawAdvices, lawStacks, round],
   );
 
   const getOtherAdvices = () => {
@@ -929,6 +974,15 @@ const useElixir = () => {
     }
 
     setIndexToAdjustAdvice(null);
+    let adviceIndex: number = 0;
+
+    for (let i = 0; i < 3; i++) {
+      if (advice === proposedAdvices[i]) {
+        adviceIndex = i;
+      }
+    }
+
+    setPickedAdviceIndex(adviceIndex);
     setPickedAdvice(advice);
   };
 
@@ -981,6 +1035,12 @@ const useElixir = () => {
     upAllEffectThatGaugeIsUnderSix,
   ];
 
+  const lawElixirFuncs = [
+    lawRegulatePickWeightAllTime,
+    lawRegulatePickWeightAllTime,
+    lawRegulatePickGreatWeightAllTime,
+  ];
+
   const adaptAdvice = () => {
     if (pickedAdvice === null) {
       //TODO : advice 안골랐을때 notice 주기
@@ -992,7 +1052,11 @@ const useElixir = () => {
       return;
     }
 
-    basicElixirFuncs[pickedAdvice.adviceNum]();
+    if (pickedAdviceIndex && lawStacks[pickedAdviceIndex] === 3) {
+      lawElixirFuncs[pickedAdvice.adviceNum]();
+    } else {
+      basicElixirFuncs[pickedAdvice.adviceNum]();
+    }
 
     // 이후 처리
     setIsUserSelectAdvice(true);
@@ -1036,6 +1100,7 @@ const useElixir = () => {
     // 이후 초기화 처리
     setIsUserSelectAdvice(false);
     setPickedAdvice(null);
+    setPickedAdviceIndex(null);
     setIndexToAdjustAdvice(null);
     setGaugeUpdateCount(1);
     setRoundRemoveCount(1);
