@@ -43,7 +43,11 @@ const Advice: FC<Props> = ({ advice, pickAdvice, isPicked, pickedEffects, lawSta
         variant="outlined"
         color="info"
         css={styles.advice}
-        style={{ backgroundColor: isPicked ? 'blue' : undefined }}
+        style={{
+          outline: isPicked ? '2px solid red' : undefined,
+          backgroundColor: lawStack === 3 ? '#2962ff' : undefined,
+          color: lawStack === 3 ? '#fff' : undefined,
+        }}
         onClick={() => {
           pickAdvice(advice);
         }}
