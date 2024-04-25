@@ -35,6 +35,7 @@ const useElixir = () => {
   const [pickedEffects, setPickedEffects] = useState<Effect[]>([]); // 내가 뽑은 효과(총 5개)
 
   const [basicAdvices, setBasicAdvices] = useState<AdviceType[]>([]); // 기초 조언 전체
+  const [lawAdvices, setLawAdvices] = useState<AdviceType[]>([]); // 질서 조언 전체
   const [proposedAdvices, setProposedAdvices] = useState<AdviceType[]>([]); // 현자가 제안하는 조언 3가지
   const [pickedAdvice, setPickedAdvice] = useState<AdviceType | null>(null); // 유저가 선택한 조언
 
@@ -857,22 +858,27 @@ const useElixir = () => {
   };
 
   const getProposedAdvices = useCallback(
-    (advices: AdviceType[]) => {
+    (advices?: AdviceType[], newLawStacks?: number[]) => {
       //TODO : 질서, 혼돈 등 다른 조언도 추가?
-      if (advices.length === 0) {
-        return;
-      }
 
       const newAdvicesToUpdate: AdviceType[] = [];
 
       for (let i = 0; i < 3; i++) {
-        const newAdvice = Chooser.chooseWeightedObject(advices, 'weight' + round) as AdviceType;
-        newAdvicesToUpdate.push(newAdvice);
+        if (newLawStacks && newLawStacks[i] === 3) {
+          const newAdvice = Chooser.chooseWeightedObject(lawAdvices, 'weight') as AdviceType;
+          newAdvicesToUpdate.push(newAdvice);
+        } else {
+          const newAdvice = Chooser.chooseWeightedObject(
+            advices ? advices : basicAdvices,
+            'weight' + round,
+          ) as AdviceType;
+          newAdvicesToUpdate.push(newAdvice);
+        }
       }
 
       setProposedAdvices(newAdvicesToUpdate);
     },
-    [round],
+    [basicAdvices, lawAdvices, round],
   );
 
   const getOtherAdvices = () => {
@@ -880,7 +886,7 @@ const useElixir = () => {
       return;
     }
 
-    getProposedAdvices(basicAdvices);
+    getProposedAdvices();
     setOtherAdvicesCount(otherAdvicesCount - 1);
   };
 
@@ -901,6 +907,22 @@ const useElixir = () => {
     });
   }, [getProposedAdvices, readString]);
 
+  const getAllLawAdvices = useCallback(async () => {
+    const response = await fetch('csv/lawAdvices.csv');
+    const reader = response.body?.getReader();
+    const result = await reader?.read();
+    const decoder = new TextDecoder('utf-8');
+    const csv = decoder.decode(result?.value);
+    readString(csv, {
+      header: true,
+      worker: true,
+      dynamicTyping: true,
+      complete: (result: ParseResult<AdviceType>) => {
+        setLawAdvices(result.data);
+      },
+    });
+  }, [readString]);
+
   const pickAdvice = (advice: AdviceType) => {
     if (isUserSelectAdvice) {
       return;
@@ -914,7 +936,7 @@ const useElixir = () => {
     setIndexToAdjustAdvice(index);
   };
 
-  const elixirFuncs = [
+  const basicElixirFuncs = [
     regulateWeightThisTime,
     regulateWeightAllTime,
     regulateWeightThisTime,
@@ -970,7 +992,7 @@ const useElixir = () => {
       return;
     }
 
-    elixirFuncs[pickedAdvice.adviceNum]();
+    basicElixirFuncs[pickedAdvice.adviceNum]();
 
     // 이후 처리
     setIsUserSelectAdvice(true);
@@ -1008,7 +1030,7 @@ const useElixir = () => {
     });
 
     setLawStacks(newLawStacks);
-    getProposedAdvices(basicAdvices);
+    getProposedAdvices(basicAdvices, newLawStacks);
     setRound(round + roundRemoveCount);
 
     // 이후 초기화 처리
@@ -1023,6 +1045,7 @@ const useElixir = () => {
   useEffect(() => {
     getAllEffects();
     getAllBasicAdvices();
+    getAllLawAdvices();
   }, []);
 
   return {
