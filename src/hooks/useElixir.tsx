@@ -891,6 +891,11 @@ const useElixir = () => {
     }
   };
 
+  //func 7
+  const lawNotUseRoundThisTime = () => {
+    setRoundRemoveCount(0);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -1106,6 +1111,7 @@ const useElixir = () => {
     lawRegulateEvenIndexEffectsGreatWeight,
     lawRegulateOddIndexEffectsGreatWeight,
     lawGaugeTwoThisTimeAndPickEffect,
+    lawNotUseRoundThisTime,
   ];
 
   const adaptAdvice = () => {
