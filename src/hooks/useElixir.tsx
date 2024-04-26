@@ -830,7 +830,7 @@ const useElixir = () => {
   };
 
   //func 4
-  const regulateEvenIndexEffectsGreatWeight = () => {
+  const lawRegulateEvenIndexEffectsGreatWeight = () => {
     if (pickedAdvice === null) {
       return;
     }
@@ -850,7 +850,7 @@ const useElixir = () => {
   };
 
   //func 5
-  const regulateOddIndexEffectsGreatWeight = () => {
+  const lawRegulateOddIndexEffectsGreatWeight = () => {
     if (pickedAdvice === null) {
       return;
     }
@@ -867,6 +867,28 @@ const useElixir = () => {
     );
 
     setPickedEffects(regulatedEffects);
+  };
+
+  //func 6
+  const lawGaugeTwoThisTimeAndPickEffect = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    setGaugeUpdateCount(2);
+
+    // 백업해두기
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = updateEffectsWeight(copiedEffects, indexToAdjustAdvice, 1);
+      setPickedEffects(regulatedEffects);
+    }
   };
 
   const getProposedEffects = useCallback((effects: Effect[]) => {
@@ -1081,8 +1103,9 @@ const useElixir = () => {
     lawRegulatePickWeightAllTime,
     lawRegulatePickGreatWeightAllTime,
     regulateAllGreatWeightAllTime,
-    regulateEvenIndexEffectsGreatWeight,
-    regulateOddIndexEffectsGreatWeight,
+    lawRegulateEvenIndexEffectsGreatWeight,
+    lawRegulateOddIndexEffectsGreatWeight,
+    lawGaugeTwoThisTimeAndPickEffect,
   ];
 
   const adaptAdvice = () => {
