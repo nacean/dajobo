@@ -19,6 +19,7 @@ import {
   updateEffectGreatWeight,
   updateEffectRandomGauge,
   updateEffectsWeight,
+  updateMultipleEffectsGreatWeight,
 } from '@src/utils/effectUtils';
 import { ParseResult } from 'papaparse';
 import Chooser from 'random-seed-weighted-chooser';
@@ -828,6 +829,46 @@ const useElixir = () => {
     }
   };
 
+  //func 4
+  const regulateEvenIndexEffectsGreatWeight = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const evenIndexes = [0, 2, 4];
+
+    const regulatedEffects = updateMultipleEffectsGreatWeight(
+      copiedEffects,
+      evenIndexes,
+      pickedAdvice.probability,
+    );
+
+    setPickedEffects(regulatedEffects);
+  };
+
+  //func 5
+  const regulateOddIndexEffectsGreatWeight = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const oddIndexes = [1, 3];
+
+    const regulatedEffects = updateMultipleEffectsGreatWeight(
+      copiedEffects,
+      oddIndexes,
+      pickedAdvice.probability,
+    );
+
+    setPickedEffects(regulatedEffects);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -1039,6 +1080,9 @@ const useElixir = () => {
     lawRegulatePickWeightAllTime,
     lawRegulatePickWeightAllTime,
     lawRegulatePickGreatWeightAllTime,
+    regulateAllGreatWeightAllTime,
+    regulateEvenIndexEffectsGreatWeight,
+    regulateOddIndexEffectsGreatWeight,
   ];
 
   const adaptAdvice = () => {

@@ -139,6 +139,25 @@ export const updateEffectGreatWeight = (
   return newPickedEffects;
 };
 
+export const updateMultipleEffectsGreatWeight = (
+  pickedEffects: Effect[],
+  indexes: number[],
+  greatWeightToAdd: number,
+) => {
+  const newPickedEffects = pickedEffects;
+
+  indexes.forEach(index => {
+    const newGreatWeightToAdd =
+      pickedEffects[index].greatWeight + greatWeightToAdd > 1
+        ? 1
+        : pickedEffects[index].greatWeight + greatWeightToAdd;
+
+    newPickedEffects[index].greatWeight = newGreatWeightToAdd;
+  });
+
+  return newPickedEffects;
+};
+
 export const updateAllEffectsGreatWeight = (pickedEffects: Effect[], greatWeightToAdd: number) => {
   const newPickedEffects = pickedEffects.map(pickedEffect => {
     const newPickedEffect = pickedEffect;
