@@ -945,6 +945,11 @@ const useElixir = () => {
     setPickedEffects(regulatedEffects);
   };
 
+  //func 10
+  const lawUpThreeGaugeThisTime = () => {
+    setGaugeUpdateCount(3);
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -1164,6 +1169,7 @@ const useElixir = () => {
     lawUpPickedEffect,
     lawUpPickedEffect,
     lawUpMostEffectGaugeTwo,
+    lawUpThreeGaugeThisTime,
   ];
 
   const adaptAdvice = () => {
