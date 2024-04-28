@@ -896,6 +896,32 @@ const useElixir = () => {
     setRoundRemoveCount(0);
   };
 
+  //func 8
+  const lawUpPickedEffect = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    setGaugeUpdateCount(2);
+
+    // 백업해두기
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    if (pickedAdvice.target === 'pick' && indexToAdjustAdvice !== null) {
+      const regulatedEffects = upOrDownEffectGaugeExactNumber(
+        copiedEffects,
+        indexToAdjustAdvice,
+        pickedAdvice.upGauge,
+      );
+      setPickedEffects(regulatedEffects);
+    }
+  };
+
   const getProposedEffects = useCallback((effects: Effect[]) => {
     if (effects.length === 0) {
       return;
@@ -1112,6 +1138,8 @@ const useElixir = () => {
     lawRegulateOddIndexEffectsGreatWeight,
     lawGaugeTwoThisTimeAndPickEffect,
     lawNotUseRoundThisTime,
+    lawUpPickedEffect,
+    lawUpPickedEffect,
   ];
 
   const adaptAdvice = () => {
