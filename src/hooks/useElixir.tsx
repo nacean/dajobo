@@ -902,8 +902,6 @@ const useElixir = () => {
       return;
     }
 
-    setGaugeUpdateCount(2);
-
     // 백업해두기
     const syncPickedEffects = pickedEffects;
     setLastPickedEffects(syncPickedEffects);
@@ -920,6 +918,31 @@ const useElixir = () => {
       );
       setPickedEffects(regulatedEffects);
     }
+  };
+
+  //func 9
+  const lawUpMostEffectGaugeTwo = () => {
+    if (pickedAdvice === null) {
+      return;
+    }
+
+    // 백업해두기
+    const syncPickedEffects = pickedEffects;
+    setLastPickedEffects(syncPickedEffects);
+    onlyThisTime.current = true;
+
+    //깊은 복사를 위한 deep copy
+    const copiedEffects = JSON.parse(JSON.stringify(pickedEffects));
+
+    const mostEffectIndex = getMostHighGaugeEffectIndex(copiedEffects);
+
+    const regulatedEffects = upOrDownEffectGaugeExactNumber(
+      copiedEffects,
+      mostEffectIndex,
+      pickedAdvice.upGauge,
+    );
+
+    setPickedEffects(regulatedEffects);
   };
 
   const getProposedEffects = useCallback((effects: Effect[]) => {
@@ -1140,6 +1163,7 @@ const useElixir = () => {
     lawNotUseRoundThisTime,
     lawUpPickedEffect,
     lawUpPickedEffect,
+    lawUpMostEffectGaugeTwo,
   ];
 
   const adaptAdvice = () => {
